@@ -13,12 +13,15 @@
 		<div class="Header">
 
 			<div class="Banner">
+			<h1>WordCampPDX Wiki</h1>
 			<?php if ( true == $conf['tpl_mmKanso']['searchForm'] ) { ?>
 				<div class="searchform"> <?php tpl_searchform() ?> </div>
 			<?php } ?>
       </div>
 
+			<!--
 			<?php tpl_renderMenu(); ?>
+			-->
 
 		</div> 
     <?php flush(); ?>

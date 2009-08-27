@@ -37,11 +37,13 @@ div.Content
 	min-height: 300px;
 }
 
+/* Igal: Hiding the logo so I can put text in the heading.
 div.Banner
 {
   background: url(../images/logo.jpg);
 	height: 100px;
 }
+*/
 
 div.MenuContainer
 {

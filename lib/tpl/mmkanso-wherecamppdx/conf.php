@@ -21,7 +21,8 @@ $conf['tpl_mmKanso']['description'] = 'page descirpion';
 /** 
  * This Text is displayed in footer
  */
-$conf['tpl_mmKanso']['footer'] = 'Copyright &copy; <a href="http://www.zenzire.com">zenzire</a>';
+// $conf['tpl_mmKanso']['footer'] = 'Copyright &copy; <a href="http://www.zenzire.com">zenzire</a>';
+$conf['tpl_mmKanso']['footer'] = '';
 
 /** 
  * Set the menu2 to be permanent (menu2.txt is taken from main directory)
@@ -31,12 +32,14 @@ $conf['tpl_mmKanso']['menu2Permanent'] = false;
 /** 
  * Displays Wiki Bar (Recent Changes, Old Version, Login)
  */
-$conf['tpl_mmKanso']['wikiBar'] = false;
+// $conf['tpl_mmKanso']['wikiBar'] = false;
+$conf['tpl_mmKanso']['wikiBar'] = true;
 
 /** 
  * Search Form visibale on page
  */
-$conf['tpl_mmKanso']['searchForm'] = true;
+// $conf['tpl_mmKanso']['searchForm'] = true;
+$conf['tpl_mmKanso']['searchForm'] = false;
 
 //Setup: vim enc=utf-8 tb=4
 ?>
