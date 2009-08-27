@@ -1,0 +1,40 @@
+mmKanso template for DokuWiki
+=============================
+
+Version 2.5 (2008-Jan-23)
+-------------------------
+- Changed banner.jpg to logo.jpg (FireFox Adblock Plus plug-in)
+
+Version 2.4 (2007-Oct-31)
+-------------------------
+- Added User Profile to bottom bar
+
+Version 2.3 (2007-Aug-22)
+-------------------------
+- Fixed older version link in bottom line (thanks to Johanes Kalbus)
+- Fixed Admin button in bottom line (thanks to Aleixo Muchanga)
+
+Version 2.2 (2007-Jan-16)
+-------------------------
+- Fixed problem with editing menus
+- Added support for DokuWiki rewrite option (0, 1 and 2)
+- Added new configuration options (menu2Permanent, wikiBar and searchForm)
+
+Version 2.1 (2007-Jan-10)
+-------------------------
+- Fixed problem with editing menu2
+
+Version 2.0 (2007-Jan-09)
+-------------------------
+- Updated media manager to DokuWiki 2006-11-06
+- Removed unused files
+
+Version 1.1 (2006-Nov-20)
+-------------------------
+- Fixed problem with editing menus
+- Changed default font to Verdana
+- Removed unused CSS files
+
+Version 1.0 (2006-Oct-06)
+-------------------------
+- Initial Version
