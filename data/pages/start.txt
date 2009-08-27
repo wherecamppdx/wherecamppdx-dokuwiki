@@ -1,8 +1,0 @@
-WhereCampPDX wiki:
-
-  * [[http://wherecamppdx.org/|Main site]]
-  * WhereCampPDX 2009
-    * [[2009:Attendees]]
-    * [[2009:Sessions]]
-  * WhereCampPDX 2008
-    * Clean up and import data from our [[http://drop.io/wherecamppdx|old stash]]

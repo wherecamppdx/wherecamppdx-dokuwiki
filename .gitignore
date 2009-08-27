@@ -1,0 +1,16 @@
+*.bak
+*.diff
+*~
+.*.swp
+/conf/acl.auth.php
+/conf/local.php
+/conf/openid.php
+/conf/users.auth.php
+/data/attic/
+/data/cache/
+/data/index/
+/data/locks/
+/data/media/
+/data/meta/
+/data/pages/
+/data/tmp/
