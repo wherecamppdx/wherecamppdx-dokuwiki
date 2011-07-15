@@ -10,9 +10,6 @@ if(!defined('DOKU_INC')) define('DOKU_INC',dirname(__FILE__).'/../../');
 if(!defined('NOSESSION')) define('NOSESSION',true); // we do not use a session or authentication here (better caching)
 if(!defined('DOKU_DISABLE_GZIP_OUTPUT')) define('DOKU_DISABLE_GZIP_OUTPUT',1); // we gzip ourself here
 require_once(DOKU_INC.'inc/init.php');
-require_once(DOKU_INC.'inc/pageutils.php');
-require_once(DOKU_INC.'inc/io.php');
-require_once(DOKU_INC.'inc/confutils.php');
 
 // Main (don't run when UNIT test)
 if(!defined('SIMPLE_TEST')){
@@ -31,15 +28,12 @@ if(!defined('SIMPLE_TEST')){
 function css_out(){
     global $conf;
     global $lang;
-    switch ($_REQUEST['s']) {
-        case 'all':
-        case 'print':
-        case 'feed':
-            $style = $_REQUEST['s'];
-        break;
-        default:
-            $style = '';
-        break;
+    global $config_cascade;
+
+    $mediatype = 'screen';
+    if (isset($_REQUEST['s']) &&
+        in_array($_REQUEST['s'], array('all', 'print', 'feed'))) {
+        $mediatype = $_REQUEST['s'];
     }
 
     $tpl = trim(preg_replace('/[^\w-]+/','',$_REQUEST['t']));
@@ -52,7 +46,7 @@ function css_out(){
     }
 
     // The generated script depends on some dynamic options
-    $cache = getCacheName('styles'.$_SERVER['HTTP_HOST'].$_SERVER['SERVER_PORT'].DOKU_BASE.$tplinc.$style,'.css');
+    $cache = getCacheName('styles'.$_SERVER['HTTP_HOST'].$_SERVER['SERVER_PORT'].DOKU_BASE.$tplinc.$mediatype,'.css');
 
     // load template styles
     $tplstyles = array();
@@ -66,25 +60,29 @@ function css_out(){
     // Array of needed files and their web locations, the latter ones
     // are needed to fix relative paths in the stylesheets
     $files   = array();
-    //if (isset($tplstyles['all'])) $files = array_merge($files, $tplstyles['all']);
-    if(!empty($style)){
-        $files[DOKU_INC.'lib/styles/'.$style.'.css'] = DOKU_BASE.'lib/styles/';
-        // load plugin, template, user styles
-        $files = array_merge($files, css_pluginstyles($style));
-        if (isset($tplstyles[$style])) $files = array_merge($files, $tplstyles[$style]);
-        $files[DOKU_CONF.'user'.$style.'.css'] = DOKU_BASE;
-    }else{
-        $files[DOKU_INC.'lib/styles/style.css'] = DOKU_BASE.'lib/styles/';
-        if($conf['spellchecker']){
-            $files[DOKU_INC.'lib/styles/spellcheck.css'] = DOKU_BASE.'lib/styles/';
-        }
-        // load plugin, template, user styles
-        $files = array_merge($files, css_pluginstyles('screen'));
-        if (isset($tplstyles['screen'])) $files = array_merge($files, $tplstyles['screen']);
+    // load core styles
+    $files[DOKU_INC.'lib/styles/'.$mediatype.'.css'] = DOKU_BASE.'lib/styles/';
+    // load plugin styles
+    $files = array_merge($files, css_pluginstyles($mediatype));
+    // load template styles
+    if (isset($tplstyles[$mediatype])) {
+        $files = array_merge($files, $tplstyles[$mediatype]);
+    }
+    // if old 'default' userstyle setting exists, make it 'screen' userstyle for backwards compatibility
+    if (isset($config_cascade['userstyle']['default'])) {
+        $config_cascade['userstyle']['screen'] = $config_cascade['userstyle']['default'];
+    }
+    // load user styles
+    if(isset($config_cascade['userstyle'][$mediatype])){
+        $files[$config_cascade['userstyle'][$mediatype]] = DOKU_BASE;
+    }
+    // load rtl styles
+    // @todo: this currently adds the rtl styles only to the 'screen' media type
+    //        but 'print' and 'all' should also be supported
+    if ($mediatype=='screen') {
         if($lang['direction'] == 'rtl'){
             if (isset($tplstyles['rtl'])) $files = array_merge($files, $tplstyles['rtl']);
         }
-        $files[DOKU_CONF.'userstyle.css'] = DOKU_BASE;
     }
 
     // check cache age & handle conditional request
@@ -127,6 +125,9 @@ function css_out(){
     // apply style replacements
     $css = css_applystyle($css,$tplinc);
 
+    // place all @import statements at the top of the file
+    $css = css_moveimports($css);
+
     // compress whitespace and comments
     if($conf['compress']){
         $css = css_compress($css);
@@ -134,7 +135,7 @@ function css_out(){
 
     // save cache file
     io_saveFile($cache,$css);
-    copy($cache,"compress.zlib://$cache.gz");
+    if(function_exists('gzopen')) io_saveFile("$cache.gz",$css);
 
     // finally send output
     if ($conf['gzip_output']) {
@@ -154,7 +155,7 @@ function css_out(){
 function css_cacheok($cache,$files,$tplinc){
     global $config_cascade;
 
-    if($_REQUEST['purge']) return false; //support purge request
+    if(isset($_REQUEST['purge'])) return false; //support purge request
 
     $ctime = @filemtime($cache);
     if(!$ctime) return false; //There is no cache
@@ -203,7 +204,7 @@ function css_interwiki(){
     // default style
     echo 'a.interwiki {';
     echo ' background: transparent url('.DOKU_BASE.'lib/images/interwiki.png) 0px 1px no-repeat;';
-    echo ' padding-left: 16px;';
+    echo ' padding: 1px 0px 1px 16px;';
     echo '}';
 
     // additional styles when icon available
@@ -237,18 +238,25 @@ function css_filetypes(){
     echo '}';
 
     // additional styles when icon available
-    $mimes = getMimeTypes();
-    foreach(array_keys($mimes) as $mime){
-        $class = preg_replace('/[^_\-a-z0-9]+/i','_',$mime);
-        if(@file_exists(DOKU_INC.'lib/images/fileicons/'.$mime.'.png')){
-            echo "a.mf_$class {";
-            echo '  background-image: url('.DOKU_BASE.'lib/images/fileicons/'.$mime.'.png)';
-            echo '}';
-        }elseif(@file_exists(DOKU_INC.'lib/images/fileicons/'.$mime.'.gif')){
-            echo "a.mf_$class {";
-            echo '  background-image: url('.DOKU_BASE.'lib/images/fileicons/'.$mime.'.gif)';
-            echo '}';
+    // scan directory for all icons
+    $exts = array();
+    if($dh = opendir(DOKU_INC.'lib/images/fileicons')){
+        while(false !== ($file = readdir($dh))){
+            if(preg_match('/([_\-a-z0-9]+(?:\.[_\-a-z0-9]+)*?)\.(png|gif)/i',$file,$match)){
+                $ext = strtolower($match[1]);
+                $type = '.'.strtolower($match[2]);
+                if($ext!='file' && (!isset($exts[$ext]) || $type=='.png')){
+                    $exts[$ext] = $type;
+                }
+            }
         }
+        closedir($dh);
+    }
+    foreach($exts as $ext=>$type){
+        $class = preg_replace('/[^_\-a-z0-9]+/','_',$ext);
+        echo "a.mf_$class {";
+        echo '  background-image: url('.DOKU_BASE.'lib/images/fileicons/'.$ext.$type.')';
+        echo '}';
     }
 }
 
@@ -261,7 +269,8 @@ function css_loadfile($file,$location=''){
     $css = io_readFile($file);
     if(!$location) return $css;
 
-    $css = preg_replace('#(url\([ \'"]*)((?!/|http://|https://| |\'|"))#','\\1'.$location.'\\3',$css);
+    $css = preg_replace('#(url\([ \'"]*)(?!/|http://|https://| |\'|")#','\\1'.$location,$css);
+    $css = preg_replace('#(@import\s+[\'"])(?!/|http://|https://)#', '\\1'.$location, $css);
     return $css;
 }
 
@@ -271,26 +280,44 @@ function css_loadfile($file,$location=''){
  *
  * @author Andreas Gohr <andi@splitbrain.org>
  */
-function css_pluginstyles($mode='screen'){
+function css_pluginstyles($mediatype='screen'){
     global $lang;
     $list = array();
     $plugins = plugin_list();
     foreach ($plugins as $p){
-        if($mode == 'all'){
-            $list[DOKU_PLUGIN."$p/all.css"]  = DOKU_BASE."lib/plugins/$p/";
-        }elseif($mode == 'print'){
-            $list[DOKU_PLUGIN."$p/print.css"]  = DOKU_BASE."lib/plugins/$p/";
-        }elseif($mode == 'feed'){
-            $list[DOKU_PLUGIN."$p/feed.css"]  = DOKU_BASE."lib/plugins/$p/";
-        }else{
+        $list[DOKU_PLUGIN."$p/$mediatype.css"]  = DOKU_BASE."lib/plugins/$p/";
+        // alternative for screen.css
+        if ($mediatype=='screen') {
             $list[DOKU_PLUGIN."$p/style.css"]  = DOKU_BASE."lib/plugins/$p/";
-            $list[DOKU_PLUGIN."$p/screen.css"] = DOKU_BASE."lib/plugins/$p/";
         }
         if($lang['direction'] == 'rtl'){
             $list[DOKU_PLUGIN."$p/rtl.css"] = DOKU_BASE."lib/plugins/$p/";
         }
     }
     return $list;
+}
+
+/**
+ * Move all @import statements in a combined stylesheet to the top so they
+ * aren't ignored by the browser.
+ *
+ * @author Gabriel Birke <birke@d-scribe.de>
+ */
+function css_moveimports($css)
+{
+    if(!preg_match_all('/@import\s+(?:url\([^)]+\)|"[^"]+")\s*[^;]*;\s*/', $css, $matches, PREG_OFFSET_CAPTURE)) {
+        return $css;
+    }
+    $newCss  = "";
+    $imports = "";
+    $offset  = 0;
+    foreach($matches[0] as $match) {
+        $newCss  .= substr($css, $offset, $match[1] - $offset);
+        $imports .= $match[0];
+        $offset   = $match[1] + strlen($match[0]);
+    }
+    $newCss .= substr($css, $offset);
+    return $imports.$newCss;
 }
 
 /**
@@ -327,5 +354,4 @@ function css_comment_cb($matches){
     return $matches[0];
 }
 
-//Setup VIM: ex: et ts=4 enc=utf-8 :
-?>
+//Setup VIM: ex: et ts=4 :

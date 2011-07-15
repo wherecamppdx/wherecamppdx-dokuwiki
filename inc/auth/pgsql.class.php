@@ -11,8 +11,7 @@
  * @author     Matthias Grimm <matthias.grimmm@sourceforge.net>
 */
 
-define('DOKU_AUTH', dirname(__FILE__));
-require_once(DOKU_AUTH.'/mysql.class.php');
+require_once(DOKU_INC.'inc/auth/mysql.class.php');
 
 class auth_pgsql extends auth_mysql {
 
@@ -196,7 +195,7 @@ class auth_pgsql extends auth_mysql {
         $sql = $this->cnf['addUserGroup'];
         if(strpos($sql,'%{uid}') !== false){
             $uid = $this->_getUserID($user);
-            $sql = str_replace('%{uid}', $sql);
+            $sql = str_replace('%{uid}', addslashes($uid), $sql);
         }
         $sql = str_replace('%{user}', addslashes($user),$sql);
         $sql = str_replace('%{gid}',  addslashes($gid),$sql);
@@ -408,4 +407,4 @@ class auth_pgsql extends auth_mysql {
 
 }
 
-//Setup VIM: ex: et ts=2 enc=utf-8 :
+//Setup VIM: ex: et ts=2 :

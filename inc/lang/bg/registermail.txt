@@ -1,14 +1,13 @@
-Нов потребител се регистрира. Ето детайли:
+Регистриран е нов потребител. Ето детайлите:
 
 Потребител  : @NEWUSER@
-Пълно име   : @NEWNAME@
-E-поща      : @NEWEMAIL@
+Пълно име : @NEWNAME@
+E. поща : @NEWEMAIL@
 
-Дата        : @DATE@
-Браузър     : @BROWSER@
-IP-адрес    : @IPADDRESS@
-Име на хоста: @HOSTNAME@
+Дата : @DATE@
+Браузър : @BROWSER@
+IP адрес : @IPADDRESS@
+Име на хоста : @HOSTNAME@
 
 -- 
-Това писмо е генерирано от DokuWiki на
-@DOKUWIKIURL@
+Писмото е генерирано от DokuWiki на адрес @DOKUWIKIURL@

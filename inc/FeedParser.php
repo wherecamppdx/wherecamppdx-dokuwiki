@@ -6,9 +6,6 @@
  */
 
 if(!defined('DOKU_INC')) die('meh.');
-require_once(DOKU_INC.'inc/HTTPClient.php');
-require_once(DOKU_INC.'inc/SimplePie.php');
-
 
 /**
  * We override some methods of the original SimplePie class here
@@ -52,6 +49,7 @@ class FeedParser_File extends SimplePie_File {
      */
     function FeedParser_File($url, $timeout=10, $redirects=5,
                              $headers=null, $useragent=null, $force_fsockopen=false) {
+        parent::__construct();
         $this->http    = new DokuHTTPClient();
         $this->success = $this->http->sendRequest($url);
 

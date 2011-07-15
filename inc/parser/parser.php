@@ -61,7 +61,7 @@ class Doku_Parser {
     function addBaseMode(& $BaseMode) {
         $this->modes['base'] = & $BaseMode;
         if ( !$this->Lexer ) {
-            $this->Lexer = & new Doku_Lexer($this->Handler,'base', true);
+            $this->Lexer = new Doku_Lexer($this->Handler,'base', true);
         }
         $this->modes['base']->Lexer = & $this->Lexer;
     }
@@ -90,7 +90,6 @@ class Doku_Parser {
             if ( $mode == 'base' ) {
                 continue;
             }
-
             $this->modes[$mode]->preConnect();
 
             foreach ( array_keys($this->modes) as $cm ) {
@@ -218,11 +217,11 @@ class Doku_Parser_Mode_footnote extends Doku_Parser_Mode {
 //-------------------------------------------------------------------
 class Doku_Parser_Mode_header extends Doku_Parser_Mode {
 
-    function preConnect() {
+    function connectTo($mode) {
         //we're not picky about the closing ones, two are enough
         $this->Lexer->addSpecialPattern(
                             '[ \t]*={2,}[^\n]+={2,}[ \t]*(?=\n)',
-                            'base',
+                            $mode,
                             'header'
                         );
     }
@@ -260,7 +259,7 @@ class Doku_Parser_Mode_nocache extends Doku_Parser_Mode {
 class Doku_Parser_Mode_linebreak extends Doku_Parser_Mode {
 
     function connectTo($mode) {
-        $this->Lexer->addSpecialPattern('\x5C{2}(?=\s)',$mode,'linebreak');
+        $this->Lexer->addSpecialPattern('\x5C{2}(?:[ \t]|(?=\n))',$mode,'linebreak');
     }
 
     function getSort() {
@@ -276,7 +275,8 @@ class Doku_Parser_Mode_eol extends Doku_Parser_Mode {
         if ( in_array($mode, $badModes) ) {
             return;
         }
-        $this->Lexer->addSpecialPattern('\n',$mode,'eol');
+        // see FS#1652, pattern extended to swallow preceding whitespace to avoid issues with lines that only contain whitespace
+        $this->Lexer->addSpecialPattern('(?:^[ \t]*)?\n',$mode,'eol');
     }
 
     function getSort() {
@@ -297,6 +297,10 @@ class Doku_Parser_Mode_hr extends Doku_Parser_Mode {
 }
 
 //-------------------------------------------------------------------
+/**
+ * This class sets the markup for bold (=strong),
+ * italic (=emphasis), underline etc.
+ */
 class Doku_Parser_Mode_formatting extends Doku_Parser_Mode {
     var $type;
 
@@ -412,8 +416,8 @@ class Doku_Parser_Mode_listblock extends Doku_Parser_Mode {
     }
 
     function connectTo($mode) {
-        $this->Lexer->addEntryPattern('\n {2,}[\-\*]',$mode,'listblock');
-        $this->Lexer->addEntryPattern('\n\t{1,}[\-\*]',$mode,'listblock');
+        $this->Lexer->addEntryPattern('[ \t]*\n {2,}[\-\*]',$mode,'listblock');
+        $this->Lexer->addEntryPattern('[ \t]*\n\t{1,}[\-\*]',$mode,'listblock');
 
         $this->Lexer->addPattern('\n {2,}[\-\*]','listblock');
         $this->Lexer->addPattern('\n\t{1,}[\-\*]','listblock');
@@ -451,7 +455,7 @@ class Doku_Parser_Mode_table extends Doku_Parser_Mode {
     function postConnect() {
         $this->Lexer->addPattern('\n\^','table');
         $this->Lexer->addPattern('\n\|','table');
-        #$this->Lexer->addPattern(' {2,}','table');
+        $this->Lexer->addPattern('[\t ]*:::[\t ]*(?=[\|\^])','table');
         $this->Lexer->addPattern('[\t ]+','table');
         $this->Lexer->addPattern('\^','table');
         $this->Lexer->addPattern('\|','table');
@@ -561,7 +565,7 @@ class Doku_Parser_Mode_code extends Doku_Parser_Mode {
 class Doku_Parser_Mode_file extends Doku_Parser_Mode {
 
     function connectTo($mode) {
-        $this->Lexer->addEntryPattern('<file>(?=.*</file>)',$mode,'file');
+        $this->Lexer->addEntryPattern('<file(?=.*</file>)',$mode,'file');
     }
 
     function postConnect() {
@@ -611,6 +615,7 @@ class Doku_Parser_Mode_acronym extends Doku_Parser_Mode {
     var $pattern = '';
 
     function Doku_Parser_Mode_acronym($acronyms) {
+    	usort($acronyms,array($this,'_compare'));
         $this->acronyms = $acronyms;
     }
 
@@ -632,6 +637,21 @@ class Doku_Parser_Mode_acronym extends Doku_Parser_Mode {
 
     function getSort() {
         return 240;
+    }
+
+    /**
+     * sort callback to order by string length descending
+     */
+    function _compare($a,$b) {
+        $a_len = strlen($a);
+        $b_len = strlen($b);
+        if ($a_len > $b_len) {
+          return -1;
+        } else if ($a_len < $b_len) {
+          return 1;
+        }
+
+    	return 0;
     }
 }
 
@@ -743,7 +763,7 @@ class Doku_Parser_Mode_multiplyentity extends Doku_Parser_Mode {
     function connectTo($mode) {
 
         $this->Lexer->addSpecialPattern(
-                    '(?<=\b)\d+[xX]\d+(?=\b)',$mode,'multiplyentity'
+                    '(?<=\b)(?:[1-9]|\d{2,})[xX]\d+(?=\b)',$mode,'multiplyentity'
                 );
 
     }
@@ -808,7 +828,7 @@ class Doku_Parser_Mode_internallink extends Doku_Parser_Mode {
 
     function connectTo($mode) {
         // Word boundaries?
-        $this->Lexer->addSpecialPattern("\[\[.+?\]\]",$mode,'internallink');
+        $this->Lexer->addSpecialPattern("\[\[(?:(?:[^[\]]*?\[.*?\])|.*?)\]\]",$mode,'internallink');
     }
 
     function getSort() {
@@ -850,7 +870,7 @@ class Doku_Parser_Mode_externallink extends Doku_Parser_Mode {
         if(count($this->patterns)) return;
 
         $ltrs = '\w';
-        $gunk = '/\#~:.?+=&%@!\-';
+        $gunk = '/\#~:.?+=&%@!\-\[\]';
         $punc = '.:?\-;,';
         $host = $ltrs.$punc;
         $any  = $ltrs.$gunk.$punc;
@@ -936,4 +956,4 @@ class Doku_Parser_Mode_emaillink extends Doku_Parser_Mode {
 }
 
 
-//Setup VIM: ex: et ts=4 enc=utf-8 :
+//Setup VIM: ex: et ts=4 :

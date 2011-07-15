@@ -5,6 +5,10 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author Bohumir Zamecnik <bohumir@zamecnik.org>
  * @author Zbynek Krivka <zbynek.krivka@seznam.cz>
+ * @author tomas@valenta.cz
+ * @author Marek Sacha <sachamar@fel.cvut.cz>
+ * @author Lefty <lefty@multihost.cz>
+ * @author Vojta Beran <xmamut@email.cz>
  */
 $lang['admin_acl']             = 'Správa přístupových práv';
 $lang['acl_group']             = 'Skupina';

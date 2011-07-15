@@ -5,12 +5,18 @@
  * @author Sergiu Baltariu <s_baltariu@yahoo.com>
  * @author s_baltariu@yahoo.com
  * @author Emanuel-Emeric Andrasi <n30@mandrivausers.ro>
+ * @author Emanuel-Emeric Andrași <n30@mandrivausers.ro>
+ * @author Emanuel-Emeric Andraşi <em.andrasi@mandrivausers.ro>
+ * @author Emanuel-Emeric Andrasi <em.andrasi@mandrivausers.ro>
  */
 $lang['menu']                  = 'Setări de Configurare';
 $lang['error']                 = 'Setări nu au fost actualizate datorită unei valori incorecte; verificaţi modificările şi încercaţi din nou. <br /> Valorile incorecte vor apărea într-un chenar roşu.';
 $lang['updated']               = 'Setările au fost actualizate cu succes.';
 $lang['nochoice']              = '(nici o altă opţiune nu este disponibilă)';
 $lang['locked']                = 'Fişierul de setări nu poate fi actualizat. Dacă nu s-a dorit aceasta, asiguraţi-vă că numele şi drepturile de acces ale fişierului de setări localizate sunt corecte.';
+$lang['danger']                = 'Pericol: Modificarea aceastei opțiuni poate conduce la imposibilitatea accesării wiki-ului și a meniului de configurare!';
+$lang['warning']               = 'Atenție: Modificarea aceastei opțiuni poate duce la evenimente nedorite!';
+$lang['security']              = 'Alertă de securitate: Modificarea acestei opțiuni poate prezenta un risc de securitate!';
 $lang['_configuration_manager'] = 'Manager Configurare';
 $lang['_header_dokuwiki']      = 'Setări DokuWiki';
 $lang['_header_plugin']        = 'Setări Plugin-uri';
@@ -76,18 +82,20 @@ $lang['profileconfirm']        = 'Confirmă schimbarea profilului cu parola';
 $lang['disableactions']        = 'Dezactivează acţiunile DokuWiki';
 $lang['disableactions_check']  = 'Verifică';
 $lang['disableactions_subscription'] = 'Subscrie/Anulează subscrierea';
-$lang['disableactions_nssubscription'] = 'Subscrie/Anulează subscrierea Spaţiului de nume';
 $lang['disableactions_wikicode'] = 'Vizualizează sursa/Export Raw';
 $lang['disableactions_other']  = 'Alte acţiuni (separate prin virgulă)';
 $lang['sneaky_index']          = 'Implicit, DokuWiki va arăta toate numele de spaţii la vizualizarea indexului. Activând această opţiune vor fi ascunse acelea la care utilizatorul nu are drepturi de citire. Aceasta poate determina ascunderea sub-numelor de spaţii accesibile. Aceasta poate face index-ul  inutilizabil cu anumite setări ale ACL';
 $lang['auth_security_timeout'] = 'Timpul de expirare al Autentificării Securizate (secunde)';
 $lang['securecookie']          = 'Cookies-urile setate via HTTPS să fie trimise doar via HTTPS de către browser? Dezactivaţi această opţiune numai când login-ul wiki-ului este securizat cu SSL dar navigarea wiki-ului se realizează nesecurizat.';
-$lang['updatecheck']           = 'Verificare actualizări şi avertismente privind securitatea? DokuWiki trebuie să contacteze splitbrain.org pentru această facilitate.';
+$lang['xmlrpc']                = 'Activează/dezactivează interfaţa XML-RPC';
+$lang['xmlrpcuser']            = 'Restricţionaţi accesul XML-RPC la grupurile sau utilizatorii separaţi prin virgulă daţi aici. Lasaţi gol pentru a da acces tuturor.';
+$lang['updatecheck']           = 'Verificare actualizări şi avertismente privind securitatea? DokuWiki trebuie să contacteze update.dokuwiki.org pentru această facilitate.';
 $lang['userewrite']            = 'Folosire URL-uri "nice"';
 $lang['useslash']              = 'Foloseşte slash-ul ca separator de spaţii de nume în URL-uri';
 $lang['usedraft']              = 'Salvează automat o schiţă în timpul editării';
 $lang['sepchar']               = 'Separator cuvinte în numele paginii';
 $lang['canonical']             = 'Foloseşte URL-uri canonice';
+$lang['fnencode']              = 'Metoda de encodare a numelor fişierelor non-ASCII.';
 $lang['autoplural']            = 'Verifică formele de plural în legături';
 $lang['compression']           = 'Metoda de criptare a fişierelor pod';
 $lang['cachetime']             = 'Durata maximă pentru cache (secunde)';
@@ -96,18 +104,19 @@ $lang['fetchsize']             = 'Dimensiunea maximă (byte) pe care fetch.php p
 $lang['notify']                = 'Trimite notificări privind modificările pe această adresă de email';
 $lang['registernotify']        = 'Trimite informare noilor utilizatori înregistraţi pe această adresă de email';
 $lang['mailfrom']              = 'Adresa de email utilizată pentru mailuri automate';
+$lang['mailprefix']            = 'Prefix subiect e-mail de folosit pentru mail-uri automate';
 $lang['gzip_output']           = 'Foloseşte gzip pentru codarea conţinutului xhtml';
 $lang['gdlib']                 = 'Versiunea GD Lib';
 $lang['im_convert']            = 'Calea către instrumentul de conversie ImageMagick';
 $lang['jpg_quality']           = 'Calitatea compresiei JPG (0-100)';
 $lang['subscribers']           = 'Activează suportul pentru subscrierea paginii';
+$lang['subscribe_time']        = 'Timpul după care lista de abonare şi digestie sunt trimise (sec); Aceasta ar trebui să fie mai mic decât timpul specificat în recent_days.';
 $lang['compress']              = 'Compactează codul CSS şi javascript produs';
 $lang['hidepages']             = 'Ascunde paginile pereche (expresii regulate)';
 $lang['send404']               = 'Trimite mesajul "HTTP 404/Page Not Found" pentru paginile inexistente';
 $lang['sitemap']               = 'Generează Google sitemap (zile)';
 $lang['broken_iua']            = 'Funcţia ignore_user_abort nu funcţionează pe sistemul dumneavoastră? Aceasta poate determina nefuncţionarea indexului de căutare. IIS+PHP/CGI sunt cunoscute ca fiind nefuncţionale. Mai multe detalii găsiţi la <a href="http://bugs.splitbrain.org/?do=details&amp;task_id=852">Bug 852</a>';
 $lang['xsendfile']             = 'Folosiţi header-ul X-Send pentru a-i permite serverului web să trimită fişiere statice? Serverul web trebuie să permită aceasta.';
-$lang['xmlrpc']                = 'Activează/dezactivează interfaţa XML-RPC';
 $lang['renderer_xhtml']        = 'Motorul de randare principal folosit pentru afişarea wiki în format xhtml';
 $lang['renderer__core']        = '%s (nucleu dokuwiki)';
 $lang['renderer__plugin']      = '%s (plugin)';
@@ -128,6 +137,7 @@ $lang['proxy____port']         = 'Port Proxy';
 $lang['proxy____user']         = 'Nume utilizator Proxy';
 $lang['proxy____pass']         = 'Parolă Proxy';
 $lang['proxy____ssl']          = 'Foloseşte SSL pentru conectare la Proxy';
+$lang['proxy____except']       = 'Expresie regulară de potrivit cu URL-uri pentru care proxy-ul trebuie păsuit.';
 $lang['safemodehack']          = 'Activează safemode hack';
 $lang['ftp____host']           = 'Server FTP pentru safemode hack';
 $lang['ftp____port']           = 'Port FTP pentru safemode hack';
@@ -175,3 +185,4 @@ $lang['useheading_o_0']        = 'Niciodată';
 $lang['useheading_o_navigation'] = 'Doar navigare';
 $lang['useheading_o_content']  = 'Doar conţinutul Wiki';
 $lang['useheading_o_1']        = 'Întotdeauna';
+$lang['readdircache']          = 'Vârsta maximă depozitare readdir (sec)';

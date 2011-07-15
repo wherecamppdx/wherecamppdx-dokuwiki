@@ -9,15 +9,9 @@
   if(!defined('DOKU_INC')) define('DOKU_INC',dirname(__FILE__).'/../../');
   define('DOKU_DISABLE_GZIP_OUTPUT', 1);
   require_once(DOKU_INC.'inc/init.php');
-  require_once(DOKU_INC.'inc/common.php');
-  require_once(DOKU_INC.'inc/media.php');
-  require_once(DOKU_INC.'inc/pageutils.php');
-  require_once(DOKU_INC.'inc/confutils.php');
-  require_once(DOKU_INC.'inc/auth.php');
 
-  //close sesseion
+  //close session
   session_write_close();
-  if(!defined('CHUNK_SIZE')) define('CHUNK_SIZE',16*1024);
 
   $mimetypes = getMimeTypes();
 
@@ -26,73 +20,66 @@
   $CACHE  = calc_cache($_REQUEST['cache']);
   $WIDTH  = (int) $_REQUEST['w'];
   $HEIGHT = (int) $_REQUEST['h'];
-  list($EXT,$MIME,$DL) = mimetype($MEDIA);
+  list($EXT,$MIME,$DL) = mimetype($MEDIA,false);
   if($EXT === false){
     $EXT  = 'unknown';
     $MIME = 'application/octet-stream';
     $DL   = true;
   }
 
-  //media to local file
-  if(preg_match('#^(https?)://#i',$MEDIA)){
-    //handle external images
-    if(strncmp($MIME,'image/',6) == 0) $FILE = media_get_from_URL($MEDIA,$EXT,$CACHE);
-    if(!$FILE){
-      //download failed - redirect to original URL
-      header('Location: '.$MEDIA);
-      exit;
-    }
-  }else{
-    $MEDIA = cleanID($MEDIA);
-    if(empty($MEDIA)){
-      header("HTTP/1.0 400 Bad Request");
-      print 'Bad request';
-      exit;
-    }
+  // check for permissions, preconditions and cache external files
+  list($STATUS, $STATUSMESSAGE) = checkFileStatus($MEDIA, $FILE);
 
-    //check permissions (namespace only)
-    if(auth_quickaclcheck(getNS($MEDIA).':X') < AUTH_READ){
-      header("HTTP/1.0 401 Unauthorized");
-      //fixme add some image for imagefiles
-      print 'Unauthorized';
+  // prepare data for plugin events
+  $data = array('media'           => $MEDIA,
+                'file'            => $FILE,
+                'orig'            => $FILE,
+                'mime'            => $MIME,
+                'download'        => $DL,
+                'cache'           => $CACHE,
+                'ext'             => $EXT,
+                'width'           => $WIDTH,
+                'height'          => $HEIGHT,
+                'status'          => $STATUS,
+                'statusmessage'   => $STATUSMESSAGE,
+  );
+
+  // handle the file status
+  $evt = new Doku_Event('FETCH_MEDIA_STATUS', $data);
+  if ( $evt->advise_before() ) {
+    // redirects
+    if($data['status'] > 300 && $data['status'] <= 304){
+      send_redirect($data['statusmessage']);
+    }
+    // send any non 200 status
+    if($data['status'] != 200){
+      header('HTTP/1.0 ' . $data['status'] . ' ' . $data['statusmessage']);
+    }
+    // die on errors
+    if($data['status'] > 203){
+      print $data['statusmessage'];
       exit;
     }
-    $FILE  = mediaFN($MEDIA);
   }
-
-  //check file existance
-  if(!@file_exists($FILE)){
-    header("HTTP/1.0 404 Not Found");
-    //FIXME add some default broken image
-    print 'Not Found';
-    exit;
-  }
-
-  $ORIG = $FILE;
+  $evt->advise_after();
+  unset($evt);
 
   //handle image resizing/cropping
   if((substr($MIME,0,5) == 'image') && $WIDTH){
     if($HEIGHT){
-        $FILE = media_crop_image($FILE,$EXT,$WIDTH,$HEIGHT);
+        $data['file'] = $FILE = media_crop_image($data['file'],$EXT,$WIDTH,$HEIGHT);
     }else{
-        $FILE = media_resize_image($FILE,$EXT,$WIDTH,$HEIGHT);
+        $data['file'] = $FILE  = media_resize_image($data['file'],$EXT,$WIDTH,$HEIGHT);
     }
   }
 
   // finally send the file to the client
-  $data = array('file'     => $FILE,
-                'mime'     => $MIME,
-                'download' => $DL,
-                'cache'    => $CACHE,
-                'orig'     => $ORIG,
-                'ext'      => $EXT,
-                'width'    => $WIDTH,
-                'height'   => $HEIGHT);
-
   $evt = new Doku_Event('MEDIA_SENDFILE', $data);
   if ($evt->advise_before()) {
     sendFile($data['file'],$data['mime'],$data['download'],$data['cache']);
   }
+  // Do something after the download finished.
+  $evt->advise_after();
 
 /* ------------------------------------------------------------------------ */
 
@@ -139,24 +126,10 @@ function sendFile($file,$mime,$dl,$cache){
   //use x-sendfile header to pass the delivery to compatible webservers
   if (http_sendfile($file)) exit;
 
-  //support download continueing
-  header('Accept-Ranges: bytes');
-  list($start,$len) = http_rangeRequest(filesize($file));
-
   // send file contents
   $fp = @fopen($file,"rb");
   if($fp){
-    fseek($fp,$start); //seek to start of range
-
-    $chunk = ($len > CHUNK_SIZE) ? CHUNK_SIZE : $len;
-    while (!feof($fp) && $chunk > 0) {
-      @set_time_limit(30); // large files can take a lot of time
-      print fread($fp, $chunk);
-      flush();
-      $len -= $chunk;
-      $chunk = ($len > CHUNK_SIZE) ? CHUNK_SIZE : $len;
-    }
-    fclose($fp);
+    http_rangeRequest($fp,filesize($file),$mime);
   }else{
     header("HTTP/1.0 500 Internal Server Error");
     print "Could not read $file - bad permissions?";
@@ -164,41 +137,50 @@ function sendFile($file,$mime,$dl,$cache){
 }
 
 /**
- * Checks and sets headers to handle range requets
+ * Check for media for preconditions and return correct status code
  *
- * @author  Andreas Gohr <andi@splitbrain.org>
- * @returns array The start byte and the amount of bytes to send
+ * READ: MEDIA, MIME, EXT, CACHE
+ * WRITE: MEDIA, FILE, array( STATUS, STATUSMESSAGE )
+ *
+ * @author Gerry Weissbach <gerry.w@gammaproduction.de>
+ * @param $media reference to the media id
+ * @param $file reference to the file variable
+ * @returns array(STATUS, STATUSMESSAGE)
  */
-function http_rangeRequest($size){
-  if(!isset($_SERVER['HTTP_RANGE'])){
-    // no range requested - send the whole file
-    header("Content-Length: $size");
-    return array(0,$size);
+function checkFileStatus(&$media, &$file) {
+  global $MIME, $EXT, $CACHE;
+
+  //media to local file
+  if(preg_match('#^(https?)://#i',$media)){
+    //check hash
+    if(substr(md5(auth_cookiesalt().$media),0,6) != $_REQUEST['hash']){
+      return array( 412, 'Precondition Failed');
+    }
+    //handle external images
+    if(strncmp($MIME,'image/',6) == 0) $file = media_get_from_URL($media,$EXT,$CACHE);
+    if(!$file){
+      //download failed - redirect to original URL
+      return array( 302, $media );
+    }
+  }else{
+    $media = cleanID($media);
+    if(empty($media)){
+      return array( 400, 'Bad request' );
+    }
+
+    //check permissions (namespace only)
+    if(auth_quickaclcheck(getNS($media).':X') < AUTH_READ){
+      return array( 403, 'Forbidden' );
+    }
+    $file  = mediaFN($media);
   }
 
-  $t = explode('=', $_SERVER['HTTP_RANGE']);
-  if (!$t[0]=='bytes') {
-    // we only understand byte ranges - send the whole file
-    header("Content-Length: $size");
-    return array(0,$size);
+  //check file existance
+  if(!@file_exists($file)){
+      return array( 404, 'Not Found' );
   }
 
-  $r = explode('-', $t[1]);
-  $start = (int)$r[0];
-  $end = (int)$r[1];
-  if (!$end) $end = $size - 1;
-  if ($start > $end || $start > $size || $end > $size){
-    header('HTTP/1.1 416 Requested Range Not Satisfiable');
-    print 'Bad Range Request!';
-    exit;
-  }
-
-  $tot = $end - $start + 1;
-  header('HTTP/1.1 206 Partial Content');
-  header("Content-Range: bytes {$start}-{$end}/{$size}");
-  header("Content-Length: $tot");
-
-  return array($start,$tot);
+  return array(200, null);
 }
 
 /**
@@ -216,5 +198,4 @@ function calc_cache($cache){
   return -1; //cache endless
 }
 
-//Setup VIM: ex: et ts=2 enc=utf-8 :
-?>
+//Setup VIM: ex: et ts=2 :

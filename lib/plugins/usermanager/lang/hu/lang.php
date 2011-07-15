@@ -3,11 +3,15 @@
  * Hungarian language file
  *
  * @author Sandor TIHANYI <stihanyi+dw@gmail.com>
+ * @author Siaynoq Mage <siaynoqmage@gmail.com>
+ * @author schilling.janos@gmail.com
+ * @author Szabó Dávid <szabo.david@gyumolcstarhely.hu>
+ * @author Sándor TIHANYI <stihanyi+dw@gmail.com>
  */
 $lang['menu']                  = 'Felhasználók kezelése';
 $lang['noauth']                = '(A felhasználói azonosítás nem működik.)';
 $lang['nosupport']             = '(A felhasználók kezelése nem támogatott.)';
-$lang['badauth']               = 'nem érvényes authentikációs technika';
+$lang['badauth']               = 'nem érvényes autentikációs technika';
 $lang['user_id']               = 'Felhasználó azonosító';
 $lang['user_pass']             = 'Jelszó';
 $lang['user_name']             = 'Név';

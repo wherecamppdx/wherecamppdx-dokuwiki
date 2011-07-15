@@ -7,7 +7,7 @@
  *
  * This is a piece of PHP code so PHP syntax applies!
  *
- * For help with the configuration see http://www.splitbrain.org/dokuwiki/wiki:config
+ * For help with the configuration see http://www.dokuwiki.org/config
  */
 
 
@@ -45,7 +45,7 @@ $conf['deaccent']    = 1;                 //deaccented chars in pagenames (1) or
 $conf['useheading']  = 0;                 //use the first heading in a page as its name
 $conf['refcheck']    = 1;                 //check for references before deleting media files
 $conf['refshow']     = 0;                 //how many references should be shown, 5 is a good value
-$conf['showuseras']  = 'loginname';       // 'loginname' users login name 
+$conf['showuseras']  = 'loginname';       // 'loginname' users login name
                                           // 'username' users full name
                                           // 'email' e-mail address (will be obfuscated as per mailguard)
                                           // 'email_link' e-mail address as a mailto: link (obfuscated)
@@ -77,6 +77,9 @@ $conf['sneaky_index']   = 0;             //check for namespace read permission i
 $conf['auth_security_timeout'] = 900;    //time (seconds) auth data is considered valid, set to 0 to recheck on every page view
 $conf['securecookie'] = 1;               //never send HTTPS cookies via HTTP
 
+$conf['xmlrpc']      = 0;                //Enable/disable XML-RPC interface
+$conf['xmlrpcuser']  = '!!not set!!';    //Restrict XML-RPC access to this groups/users
+
 /* Advanced Options */
 
 $conf['updatecheck'] = 1;                //automatically check for new releases?
@@ -86,6 +89,7 @@ $conf['usedraft']    = 1;                //automatically save a draft while edit
 $conf['sepchar']     = '_';              //word separator character in page names; may be a
                                          //  letter, a digit, '_', '-', or '.'.
 $conf['canonical']   = 0;                //Should all URLs use full canonical http://... style?
+$conf['fnencode']    = 'url';            //encode filenames (url|safe|utf-8)
 $conf['autoplural']  = 0;                //try (non)plural form of nonexisting files?
 $conf['compression'] = 'gz';             //compress old revisions: (0: off) ('gz': gnuzip) ('bz2': bzip)
                                          //  bz2 generates smaller files, but needs more cpu-power
@@ -95,11 +99,14 @@ $conf['fetchsize']   = 0;                //maximum size (bytes) fetch.php may do
 $conf['notify']      = '';               //send change info to this email (leave blank for nobody)
 $conf['registernotify'] = '';            //send info about newly registered users to this email (leave blank for nobody)
 $conf['mailfrom']    = '';               //use this email when sending mails
+$conf['mailprefix']  = '';               //use this as prefix of outgoing mails
 $conf['gzip_output'] = 0;                //use gzip content encodeing for the output xhtml (if allowed by browser)
 $conf['gdlib']       = 2;                //the GDlib version (0, 1 or 2) 2 tries to autodetect
 $conf['im_convert']  = '';               //path to ImageMagicks convert (will be used instead of GD)
 $conf['jpg_quality'] = '70';             //quality of compression when scaling jpg images (0-100)
 $conf['subscribers'] = 0;                //enable change notice subscription support
+$conf['subscribe_time'] = 24*60*60;      //Time after which digests / lists are sent (in sec, default 1 day)
+                                         //Should be smaller than the time specified in recent_days
 $conf['compress']    = 1;                //Strip whitespaces and comments from Styles and JavaScript? 1|0
 $conf['hidepages']   = '';               //Regexp for pages to be skipped from RSS, Search and Recent Changes
 $conf['send404']     = 0;                //Send a HTTP 404 status for non existing pages?
@@ -115,17 +122,16 @@ $conf['rss_linkto'] = 'diff';            //what page RSS entries link to:
                                          //  'page'    - the revised page itself
                                          //  'rev'     - page showing all revisions
                                          //  'current' - most recent revision of page
-$conf['rss_content'] = 'abstract';       // what to put in the items by deafult?
+$conf['rss_content'] = 'abstract';       // what to put in the items by default?
                                          //  'abstract' - plain text, first paragraph or so
                                          //  'diff'     - plain text unified diff wrapped in <pre> tags
                                          //  'htmldiff' - diff as HTML table
                                          //  'html'     - the full page rendered in XHTML
-$conf['rss_update'] = 5*60;              //Update the RSS feed every n minutes (defaults to 5 minutes)
+$conf['rss_update'] = 5*60;              //Update the RSS feed every n seconds (defaults to 5 minutes)
 $conf['recent_days'] = 7;                //How many days of recent changes to keep. (days)
 $conf['rss_show_summary'] = 1;           //Add revision summary to title? 0|1
 $conf['broken_iua']  = 0;                //Platform with broken ignore_user_abort (IIS+CGI) 0|1
 $conf['xsendfile']   = 0;                //Use X-Sendfile (1 = lighttpd, 2 = standard)
-$conf['xmlrpc'] = 0;                     //Enable/disable XML-RPC interface
 $conf['renderer_xhtml'] = 'xhtml';       //renderer to use for main page generation
 $conf['rememberme'] = 1;                 //Enable/disable remember me on login
 
@@ -137,11 +143,12 @@ $conf['target']['media']     = '';
 $conf['target']['windows']   = '';
 
 //Proxy setup - if your Server needs a proxy to access the web set these
-$conf['proxy']['host'] = '';
-$conf['proxy']['port'] = '';
-$conf['proxy']['user'] = '';
-$conf['proxy']['pass'] = '';
-$conf['proxy']['ssl']  = 0;
+$conf['proxy']['host']    = '';
+$conf['proxy']['port']    = '';
+$conf['proxy']['user']    = '';
+$conf['proxy']['pass']    = '';
+$conf['proxy']['ssl']     = 0;
+$conf['proxy']['except']  = '';
 
 /* Safemode Hack */
 
@@ -152,3 +159,4 @@ $conf['ftp']['user'] = 'user';
 $conf['ftp']['pass'] = 'password';
 $conf['ftp']['root'] = '/home/user/htdocs';
 
+$conf['readdircache'] = 0;               //time cache in second for the readdir opération, 0 to deactivate.

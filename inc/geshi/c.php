@@ -5,14 +5,17 @@
  * Author: Nigel McNie (nigel@geshi.org)
  * Contributors:
  *  - Jack Lloyd (lloyd@randombit.net)
+ *  - Michael Mol (mikemol@gmail.com)
  * Copyright: (c) 2004 Nigel McNie (http://qbnz.com/highlighter/)
- * Release Version: 1\.0\.8
+ * Release Version: 1.0.8.8
  * Date Started: 2004/06/04
  *
  * C language file for GeSHi.
  *
  * CHANGES
  * -------
+ * 2009/01/22 (1.0.8.3)
+ *   -  Made keywords case-sensitive.
  * 2008/05/23 (1.0.7.22)
  *   -  Added description of extra language features (SF#1970248)
  * 2004/XX/XX (1.0.4)
@@ -26,7 +29,7 @@
  * 2004/07/14 (1.0.0)
  *   -  First Release
  *
- * TODO (updated 2004/11/27)
+ * TODO (updated 2009/02/08)
  * -------------------------
  *  -  Get a list of inbuilt functions to add (and explore C more
  *     to complete this rather bare language file
@@ -53,16 +56,33 @@
 
 $language_data = array (
     'LANG_NAME' => 'C',
-    'COMMENT_SINGLE' => array(2 => '#'),
+    'COMMENT_SINGLE' => array(1 => '//', 2 => '#'),
     'COMMENT_MULTI' => array('/*' => '*/'),
-    //Multiline-continued single-line comments
-    'COMMENT_REGEXP' => array(1 => '/\/\/(?:\\\\\\\\|\\\\\\n|.)*$/m'),
+    'COMMENT_REGEXP' => array(
+        //Multiline-continued single-line comments
+        1 => '/\/\/(?:\\\\\\\\|\\\\\\n|.)*$/m',
+        //Multiline-continued preprocessor define
+        2 => '/#(?:\\\\\\\\|\\\\\\n|.)*$/m'
+        ),
     'CASE_KEYWORDS' => GESHI_CAPS_NO_CHANGE,
     'QUOTEMARKS' => array("'", '"'),
-    'ESCAPE_CHAR' => '\\',
-    'NUMBERS' => GESHI_NUMBER_INT_BASIC | GESHI_NUMBER_INT_CSTYLE | GESHI_NUMBER_BIN_PREFIX_0B |
-                 GESHI_NUMBER_OCT_PREFIX | GESHI_NUMBER_HEX_PREFIX | GESHI_NUMBER_FLT_NONSCI |
-                 GESHI_NUMBER_FLT_NONSCI_F | GESHI_NUMBER_FLT_SCI_SHORT | GESHI_NUMBER_FLT_SCI_ZERO,
+    'ESCAPE_CHAR' => '',
+    'ESCAPE_REGEXP' => array(
+        //Simple Single Char Escapes
+        1 => "#\\\\[\\\\abfnrtv\'\"?\n]#i",
+        //Hexadecimal Char Specs
+        2 => "#\\\\x[\da-fA-F]{2}#",
+        //Hexadecimal Char Specs
+        3 => "#\\\\u[\da-fA-F]{4}#",
+        //Hexadecimal Char Specs
+        4 => "#\\\\U[\da-fA-F]{8}#",
+        //Octal Char Specs
+        5 => "#\\\\[0-7]{1,3}#"
+        ),
+    'NUMBERS' =>
+        GESHI_NUMBER_INT_BASIC | GESHI_NUMBER_INT_CSTYLE | GESHI_NUMBER_BIN_PREFIX_0B |
+        GESHI_NUMBER_OCT_PREFIX | GESHI_NUMBER_HEX_PREFIX | GESHI_NUMBER_FLT_NONSCI |
+        GESHI_NUMBER_FLT_NONSCI_F | GESHI_NUMBER_FLT_SCI_SHORT | GESHI_NUMBER_FLT_SCI_ZERO,
     'KEYWORDS' => array(
         1 => array(
             'if', 'return', 'while', 'case', 'continue', 'default',
@@ -76,8 +96,22 @@ $language_data = array (
             ),
         4 => array(
             'auto', 'char', 'const', 'double',  'float', 'int', 'long',
-            'register', 'short', 'signed', 'sizeof', 'static', 'string', 'struct',
-            'typedef', 'union', 'unsigned', 'void', 'volatile', 'wchar_t'
+            'register', 'short', 'signed', 'sizeof', 'static', 'struct',
+            'typedef', 'union', 'unsigned', 'void', 'volatile', 'wchar_t',
+
+            'int8', 'int16', 'int32', 'int64',
+            'uint8', 'uint16', 'uint32', 'uint64',
+
+            'int_fast8_t', 'int_fast16_t', 'int_fast32_t', 'int_fast64_t',
+            'uint_fast8_t', 'uint_fast16_t', 'uint_fast32_t', 'uint_fast64_t',
+
+            'int_least8_t', 'int_least16_t', 'int_least32_t', 'int_least64_t',
+            'uint_least8_t', 'uint_least16_t', 'uint_least32_t', 'uint_least64_t',
+
+            'int8_t', 'int16_t', 'int32_t', 'int64_t',
+            'uint8_t', 'uint16_t', 'uint32_t', 'uint64_t',
+
+            'intmax_t', 'uintmax_t', 'intptr_t', 'uintptr_t'
             ),
         ),
     'SYMBOLS' => array(
@@ -90,10 +124,10 @@ $language_data = array (
         ),
     'CASE_SENSITIVE' => array(
         GESHI_COMMENTS => false,
-        1 => false,
-        2 => false,
-        3 => false,
-        4 => false,
+        1 => true,
+        2 => true,
+        3 => true,
+        4 => true,
         ),
     'STYLES' => array(
         'KEYWORDS' => array(
@@ -108,7 +142,13 @@ $language_data = array (
             'MULTI' => 'color: #808080; font-style: italic;'
             ),
         'ESCAPE_CHAR' => array(
-            0 => 'color: #000099; font-weight: bold;'
+            0 => 'color: #000099; font-weight: bold;',
+            1 => 'color: #000099; font-weight: bold;',
+            2 => 'color: #660099; font-weight: bold;',
+            3 => 'color: #660099; font-weight: bold;',
+            4 => 'color: #660099; font-weight: bold;',
+            5 => 'color: #006699; font-weight: bold;',
+            'HARD' => '',
             ),
         'BRACKETS' => array(
             0 => 'color: #009900;'

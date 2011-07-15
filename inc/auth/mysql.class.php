@@ -8,9 +8,6 @@
  * @author     Matthias Grimm <matthias.grimmm@sourceforge.net>
 */
 
-define('DOKU_AUTH', dirname(__FILE__));
-require_once(DOKU_AUTH.'/basic.class.php');
-
 class auth_mysql extends auth_basic {
 
     var $dbcon        = 0;
@@ -49,7 +46,7 @@ class auth_mysql extends auth_basic {
 
       // set capabilities based upon config strings set
       if (empty($this->cnf['server']) || empty($this->cnf['user']) ||
-          empty($this->cnf['password']) || empty($this->cnf['database'])){
+          !isset($this->cnf['password']) || empty($this->cnf['database'])){
         if ($this->cnf['debug'])
           msg("MySQL err: insufficient configuration.",-1,__LINE__,__FILE__);
         $this->success = false;
@@ -398,6 +395,13 @@ class auth_mysql extends auth_basic {
         $this->_closeDB();
       }
       return $rc;
+    }
+
+    /**
+     * MySQL is case-insensitive
+     */
+    function isCaseSensitive(){
+        return false;
     }
 
     /**
@@ -772,6 +776,10 @@ class auth_mysql extends auth_basic {
      * @author Matthias Grimm <matthiasgrimm@users.sourceforge.net>
      */
     function _queryDB($query) {
+      if($this->cnf['debug'] >= 2){
+        msg('MySQL query: '.hsc($query),0,__LINE__,__FILE__);
+      }
+
       $resultarray = array();
       if ($this->dbcon) {
         $result = @mysql_query($query,$this->dbcon);
@@ -928,4 +936,4 @@ class auth_mysql extends auth_basic {
     }
 }
 
-//Setup VIM: ex: et ts=2 enc=utf-8 :
+//Setup VIM: ex: et ts=2 :

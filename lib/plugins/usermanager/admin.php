@@ -13,9 +13,7 @@
 // must be run within Dokuwiki
 if(!defined('DOKU_INC')) die();
 
-if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 if(!defined('DOKU_PLUGIN_IMAGES')) define('DOKU_PLUGIN_IMAGES',DOKU_BASE.'lib/plugins/usermanager/images/');
-require_once(DOKU_PLUGIN.'admin.php');
 
 /**
  * All DokuWiki plugins to extend the admin function
@@ -323,14 +321,23 @@ class admin_plugin_usermanager extends DokuWiki_Admin_Plugin {
         $disabled = $cando ? '' : ' disabled="disabled"';
         echo str_pad('',$indent);
 
+        if($name == 'userpass'){
+            $fieldtype = 'password';
+            $autocomp  = 'autocomplete="off"';
+        }else{
+            $fieldtype = 'text';
+            $autocomp  = '';
+        }
+
+
         echo "<tr $class>";
         echo "<td><label for=\"$id\" >$label: </label></td>";
         echo "<td>";
         if($cando){
-            echo "<input type=\"text\" id=\"$id\" name=\"$name\" value=\"$value\" class=\"edit\" />";
+            echo "<input type=\"$fieldtype\" id=\"$id\" name=\"$name\" value=\"$value\" class=\"edit\" $autocomp />";
         }else{
             echo "<input type=\"hidden\" name=\"$name\" value=\"$value\" />";
-            echo "<input type=\"text\" id=\"$id\" name=\"$name\" value=\"$value\" class=\"edit disabled\" disabled=\"disabled\" />";
+            echo "<input type=\"$fieldtype\" id=\"$id\" name=\"$name\" value=\"$value\" class=\"edit disabled\" disabled=\"disabled\" />";
         }
         echo "</td>";
         echo "</tr>";
@@ -356,16 +363,43 @@ class admin_plugin_usermanager extends DokuWiki_Admin_Plugin {
 
         list($user,$pass,$name,$mail,$grps) = $this->_retrieveUser();
         if (empty($user)) return false;
-        if (empty($pass)){
-          if(!empty($_REQUEST['usernotify'])){
-            $pass = auth_pwgen();
-          } else {
+
+        if ($this->_auth->canDo('modPass')){
+          if (empty($pass)){
+            if(!empty($_REQUEST['usernotify'])){
+              $pass = auth_pwgen();
+            } else {
+              msg($this->lang['add_fail'], -1);
+              return false;
+            }
+          }
+        } else {
+          if (!empty($pass)){
+            msg($this->lang['add_fail'], -1);
             return false;
           }
         }
-        if (empty($name) || empty($mail)){
-          msg($this->lang['add_fail'], -1);
-          return false;
+
+        if ($this->_auth->canDo('modName')){
+          if (empty($name)){
+            msg($this->lang['add_fail'], -1);
+            return false;
+          }
+        } else {
+          if (!empty($name)){
+            return false;
+          }
+        }
+
+        if ($this->_auth->canDo('modMail')){
+          if (empty($mail)){
+            msg($this->lang['add_fail'], -1);
+            return false;
+          }
+        } else {
+          if (!empty($mail)){
+            return false;
+          }
         }
 
         if ($ok = $this->_auth->triggerUserMod('create', array($user,$pass,$name,$mail,$grps))) {
@@ -472,6 +506,11 @@ class admin_plugin_usermanager extends DokuWiki_Admin_Plugin {
           }
         }
 
+        // generate password if left empty and notification is on
+        if(!empty($_REQUEST['usernotify']) && empty($newpass)){
+            $newpass = auth_pwgen();
+        }
+
         if (!empty($newpass) && $this->_auth->canDo('modPass'))
           $changes['pass'] = $newpass;
         if (!empty($newname) && $this->_auth->canDo('modName') && $newname != $oldinfo['name'])
@@ -523,16 +562,19 @@ class admin_plugin_usermanager extends DokuWiki_Admin_Plugin {
      * @return  array(user, password, full name, email, array(groups))
      */
     function _retrieveUser($clean=true) {
+        global $auth;
 
-        $user[0] = ($clean) ? cleanID(preg_replace('/.*:/','',$_REQUEST['userid'])) : $_REQUEST['userid'];
+        $user[0] = ($clean) ? $auth->cleanUser($_REQUEST['userid']) : $_REQUEST['userid'];
         $user[1] = $_REQUEST['userpass'];
         $user[2] = $_REQUEST['username'];
         $user[3] = $_REQUEST['usermail'];
-        $user[4] = preg_split('/\s*,\s*/',$_REQUEST['usergroups'],-1,PREG_SPLIT_NO_EMPTY);
+        $user[4] = explode(',',$_REQUEST['usergroups']);
 
-        if (empty($user[4]) || (is_array($user[4]) && (count($user[4]) == 1) && (trim($user[4][0]) == ''))) {
-            $user[4] = null;
-        }
+        $user[4] = array_map('trim',$user[4]);
+        if($clean) $user[4] = array_map(array($auth,'cleanGroup'),$user[4]);
+        $user[4] = array_filter($user[4]);
+        $user[4] = array_unique($user[4]);
+        if(!count($user[4])) $user[4] = null;
 
         return $user;
     }

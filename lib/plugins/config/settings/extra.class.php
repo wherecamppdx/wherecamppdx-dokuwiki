@@ -90,7 +90,6 @@ if (!class_exists('setting_disableactions')) {
         // transfer some DokuWiki language strings to the plugin
         if (!$plugin->localised) $this->setupLocale();
         $plugin->lang[$this->_key.'_revisions'] = $lang['btn_revs'];
-        $plugin->lang[$this->_key.'_register'] = $lang['register'];
 
         foreach ($this->_choices as $choice)
           if (isset($lang['btn_'.$choice])) $plugin->lang[$this->_key.'_'.$choice] = $lang['btn_'.$choice];
@@ -170,7 +169,7 @@ if (!class_exists('setting_renderer')) {
           }
         }
       }
-      return parent::html($plugin, $echo);    
+      return parent::html($plugin, $echo);
     }
   }
 }

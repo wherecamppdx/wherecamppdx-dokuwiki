@@ -6,6 +6,8 @@
  * @author Yuji Takenaka <webmaster@davilin.com>
  * @author Christopher Smith <chris@jalakai.co.uk>
  * @author Ikuo Obataya <i.obataya@gmail.com>
+ * @author Daniel Dupriest <kououken@gmail.com>
+ * @author Kazutaka Miyasaka <kazmiya@gmail.com>
  */
 $lang['menu']                  = 'プラグイン管理';
 $lang['download']              = 'プラグインのダウンロードとインストール';
@@ -51,3 +53,4 @@ $lang['enabled']               = 'プラグイン %s が有効です。';
 $lang['notenabled']            = 'プラグイン %s を有効にすることができません。権限を確認してください。';
 $lang['disabled']              = 'プラグイン %s が無効です。';
 $lang['notdisabled']           = 'プラグイン %s を無効にすることができません。権限を確認してください。';
+$lang['packageinstalled']      = 'プラグインパッケージ（%d plugin%s: %s）は正しくインストールされました。';

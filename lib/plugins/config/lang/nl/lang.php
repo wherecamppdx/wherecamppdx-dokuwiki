@@ -8,12 +8,20 @@
  * @author John de Graaff <john@de-graaff.net>
  * @author Niels Schoot <niels.schoot@quintiq.com>
  * @author Dion Nicolaas <dion@nicolaas.net>
+ * @author Danny Rotsaert <danny.rotsaert@edpnet.be>
+ * @author Marijn Hofstra hofstra.m@gmail.com
+ * @author Matthias Carchon webmaster@c-mattic.be
+ * @author Marijn Hofstra <hofstra.m@gmail.com>
+ * @author Timon Van Overveldt <timonvo@gmail.com>
  */
 $lang['menu']                  = 'Configuratie-instellingen';
 $lang['error']                 = 'De instellingen zijn niet gewijzigd wegens een incorrecte waarde, kijk je wijzigingen na en sla dan opnieuw op.<br />Je kunt de incorrecte waarde(s) herkennen aan de rode rand.';
 $lang['updated']               = 'Instellingen met succes opgeslagen.';
 $lang['nochoice']              = '(geen andere keuzemogelijkheden)';
 $lang['locked']                = 'Het bestand met instellingen kan niet worden gewijzigd. Als dit niet de bedoeling <br /> is, controleer dan de naam en de permissies voor het lokale installingenbestand.';
+$lang['danger']                = 'Gevaar: Het wijzigen van deze optie kan er voor zorgen dat uw wiki en het configuratiemenu niet langer toegankelijk zijn.';
+$lang['warning']               = 'Waarschuwing: Het wijzigen van deze optie kan onverwachte gedragingen veroorzaken.';
+$lang['security']              = 'Beveiligingswaarschuwing: Het wijzigen van deze optie kan een beveiligingsrisico inhouden.';
 $lang['_configuration_manager'] = 'Configuratiemanager';
 $lang['_header_dokuwiki']      = 'DokuWiki-instellingen';
 $lang['_header_plugin']        = 'Plugin-instellingen';
@@ -79,18 +87,20 @@ $lang['profileconfirm']        = 'Bevestig profielwijzigingen met wachtwoord';
 $lang['disableactions']        = 'Aangevinkte DokuWiki-akties uitschakelen';
 $lang['disableactions_check']  = 'Controleer';
 $lang['disableactions_subscription'] = 'Inschrijven/opzeggen';
-$lang['disableactions_nssubscription'] = 'Namespace inschrijven/opzeggen';
 $lang['disableactions_wikicode'] = 'Bron bekijken/exporteer rauw';
 $lang['disableactions_other']  = 'Andere akties (gescheiden door komma\'s)';
 $lang['sneaky_index']          = 'Met de standaardinstellingen zal DokuWiki alle namespaces laten zien in de index. Het inschakelen van deze optie zorgt ervoor dat de namespaces waar de gebruiker geen leestoegang tot heeft, verborgen worden. Dit kan resulteren in het verbergen van subnamespaces waar de gebruiker wel toegang to heeft. Dit kan de index onbruikbaar maken met bepaalde ACL-instellingen.';
 $lang['auth_security_timeout'] = 'Authenticatiebeveiligings-timeout (seconden)';
 $lang['securecookie']          = 'Moeten cookies die via HTTPS gezet zijn alleen via HTTPS verzonden worden door de browser? Zet deze optie uit als alleen het inloggen op de wiki beveiligd is, maar het gebruik verder niet.';
-$lang['updatecheck']           = 'Controleer op nieuwe versies en beveiligingswaarschuwingen? DokuWiki moet hiervoor contact opnemen met splitbrain.org.';
+$lang['xmlrpc']                = 'Inschakelen/uitschakelen XML-RPC interface.';
+$lang['xmlrpcuser']            = 'Beperk XML-RPC toegang tot de lijst met kommagescheiden groepen of gebruikers die hier zijn opgegeven. Laat leeg om iedereen toegang te geven.';
+$lang['updatecheck']           = 'Controleer op nieuwe versies en beveiligingswaarschuwingen? DokuWiki moet hiervoor contact opnemen met update.dokuwiki.org.';
 $lang['userewrite']            = 'Gebruik nette URL\'s';
 $lang['useslash']              = 'Gebruik slash (/) als scheiding tussen namepaces in URL\'s';
 $lang['usedraft']              = 'Sla automatisch een concept op tijdens het wijzigen';
 $lang['sepchar']               = 'Woordscheider in paginanamen';
 $lang['canonical']             = 'Herleid URL\'s tot hun basisvorm';
+$lang['fnencode']              = 'Methode om niet-ASCII bestandsnamen te coderen.';
 $lang['autoplural']            = 'Controleer op meervoudsvormen in links';
 $lang['compression']           = 'Compressiemethode voor attic-bestanden';
 $lang['cachetime']             = 'Maximum leeftijd voor cache (sec)';
@@ -99,18 +109,19 @@ $lang['fetchsize']             = 'Maximum grootte (bytes) die fetch.php mag down
 $lang['notify']                = 'Stuur e-mailnotificaties naar dit adres';
 $lang['registernotify']        = 'Stuur informatie over nieuw aangemelde gebruikers naar dit e-mailadres';
 $lang['mailfrom']              = 'E-mailadres voor automatische e-mail';
+$lang['mailprefix']            = 'Te gebruiken voorvoegsel voor onderwerp automatische email';
 $lang['gzip_output']           = 'Gebruik gzip Content-Encoding voor xhtml';
 $lang['gdlib']                 = 'Versie GD Lib ';
 $lang['im_convert']            = 'Path naar ImageMagick\'s convert tool';
 $lang['jpg_quality']           = 'JPG compressiekwaliteit (0-100)';
 $lang['subscribers']           = 'Ondersteuning pagina-inschrijving aanzetten';
+$lang['subscribe_time']        = 'Inschrijvingsmeldingen en samenvattingen worden na deze tijdsduur (in seconden) verzonden. Deze waarde dient kleiner te zijn dan de tijd ingevuld bij "Hoeveel recente wijzigingen bewaren (dagen)"';
 $lang['compress']              = 'Compacte CSS en javascript output';
 $lang['hidepages']             = 'Verberg deze pagina\'s (regular expressions)';
 $lang['send404']               = 'Stuur "HTTP 404/Page Not Found" voor niet-bestaande pagina\'s';
 $lang['sitemap']               = 'Genereer Google sitemap (dagen)';
 $lang['broken_iua']            = 'Is de ignore_user_abort functie onbruikbaar op uw systeem? Dit kan een onbruikbare zoekindex tot gevolg hebben. IIS+PHP/CGI staat hier bekend om. Zie <a href="http://bugs.splitbrain.org/?do=details&amp;task_id=852">Bug 852</a> voor meer informatie.';
 $lang['xsendfile']             = 'Gebruik de X-Sendfile header om de webserver statische content te laten versturen? De webserver moet dit wel ondersteunen.';
-$lang['xmlrpc']                = 'Inschakelen/uitschakelen XML-RPC interface.';
 $lang['renderer_xhtml']        = 'Weergavesysteem voor de standaard (xhtml) wiki-uitvoer';
 $lang['renderer__core']        = '%s (dokuwiki core)';
 $lang['renderer__plugin']      = '%s (plugin)';
@@ -131,6 +142,7 @@ $lang['proxy____port']         = 'Proxy port';
 $lang['proxy____user']         = 'Proxy gebruikersnaam';
 $lang['proxy____pass']         = 'Proxy wachtwoord';
 $lang['proxy____ssl']          = 'Gebruik SSL om een connectie te maken met de proxy';
+$lang['proxy____except']       = 'Reguliere expressie om URL\'s te bepalen waarvoor de proxy overgeslaan moet worden.';
 $lang['safemodehack']          = 'Safemode hack aanzetten';
 $lang['ftp____host']           = 'FTP server voor safemode hack';
 $lang['ftp____port']           = 'FTP port voor safemode hack';
@@ -178,3 +190,4 @@ $lang['useheading_o_0']        = 'Nooit';
 $lang['useheading_o_navigation'] = 'Alleen navigatie';
 $lang['useheading_o_content']  = 'Alleen wiki inhoud';
 $lang['useheading_o_1']        = 'Altijd';
+$lang['readdircache']          = 'Maximale leeftijd voor readdir cache (in seconden)';

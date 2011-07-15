@@ -27,6 +27,7 @@ $lang['btn_logout'] = 'Thoát';
 $lang['btn_admin']  = 'Quản lý';
 $lang['btn_update'] = 'Cập nhật';
 $lang['btn_delete'] = 'Xoá';
+$lang['btn_register'] = 'Đăng ký';
 
 $lang['loggedinas'] = 'Username đang dùng';
 $lang['user']       = 'Username';
@@ -34,7 +35,6 @@ $lang['pass']       = 'Password';
 $lang['remember']   = 'Lưu username/password lại';
 $lang['fullname']   = 'Họ và tên';
 $lang['email']      = 'E-Mail';
-$lang['register']   = 'Đăng ký';
 $lang['badlogin']   = 'Username hoặc password không đúng.';
 
 $lang['regmissing'] = 'Bạn cần điền vào tất cả các trường';
@@ -51,7 +51,7 @@ $lang['lockedby']     = 'Đang khoá bởi';
 $lang['lockexpire']   = 'Khoá sẽ hết hạn vào lúc';
 $lang['willexpire']   = 'Khoá của bạn để biên soạn trang này sẽ hết hạn trong vòng 1 phút.\nĐể tránh xung đột, bạn nên bấm nút xem trước để lập lại thời gian khoá';
 
-$lang['notsavedyet'] = 'Hiện có những thay đổi chưa được bảo lưu, và sẽ mất.\nBạn thật sự muốn tiếp tục?';
+$lang['js']['notsavedyet'] = "Hiện có những thay đổi chưa được bảo lưu, và sẽ mất.\nBạn thật sự muốn tiếp tục?";
 $lang['rssfailed']   = 'Rút nguồn này gặp phải lỗi';
 $lang['nothingfound']= 'Không tìm được gì';
 
@@ -83,7 +83,6 @@ $lang['mail_changed'] = 'Trang thay đổi:';
 
 $lang['js']['nosmblinks'] = "Nối với các Windows shares chỉ có hiệu lực với Microsoft Internet Explorer.\nBạn vẫn có thể sao và chép các mốc nối.";
 
-$lang['qb_alert']   = 'Xin bạn điền đoạn văn để định dạng.\nĐoạn này sẽ được nối vào cuối văn kiện.';
 $lang['qb_bold']    = 'Chữ đậm';
 $lang['qb_italic']  = 'Chữ nghiêng';
 $lang['qb_underl']  = 'Chữ gạch dưới';
@@ -101,7 +100,7 @@ $lang['qb_ul']      = 'Điểm trong danh sách không đánh số';
 $lang['qb_media']   = 'Thêm ảnh và tệp khác';
 $lang['qb_sig']     = 'Đặt chữ ký';
 
-$lang['del_confirm']= 'Xoá mục này?';
+$lang['js']['del_confirm']= 'Xoá mục này?';
 
 
-//Setup VIM: ex: et ts=2 enc=utf-8 :
+//Setup VIM: ex: et ts=2 :

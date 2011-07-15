@@ -6,6 +6,11 @@
  * @author John de Graaff <john@de-graaff.net>
  * @author Niels Schoot <niels.schoot@quintiq.com>
  * @author Dion Nicolaas <dion@nicolaas.net>
+ * @author Danny Rotsaert <danny.rotsaert@edpnet.be>
+ * @author Marijn Hofstra hofstra.m@gmail.com
+ * @author Matthias Carchon webmaster@c-mattic.be
+ * @author Marijn Hofstra <hofstra.m@gmail.com>
+ * @author Timon Van Overveldt <timonvo@gmail.com>
  */
 $lang['menu']                  = 'Gebruikersmanager';
 $lang['noauth']                = '(gebruikersauthenticatie niet beschikbaar)';
@@ -34,7 +39,7 @@ $lang['delete_ok']             = '%d gebruikers verwijderd';
 $lang['delete_fail']           = '%d kon niet worden verwijderd.';
 $lang['update_ok']             = 'Gebruiker succesvol gewijzigd';
 $lang['update_fail']           = 'Gebruiker wijzigen mislukt';
-$lang['update_exists']         = 'Gebruikersnaam veranderen mislukt, de opgegeven gebruikersnaam (%s) bestaat reeds (overige aanpassen worden wel doorgevoerd).';
+$lang['update_exists']         = 'Gebruikersnaam veranderen mislukt, de opgegeven gebruikersnaam (%s) bestaat reeds (overige aanpassingen worden wel doorgevoerd).';
 $lang['start']                 = 'start';
 $lang['prev']                  = 'vorige';
 $lang['next']                  = 'volgende';

@@ -5,16 +5,23 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author Bohumir Zamecnik <bohumir@zamecnik.org>
  * @author Zbynek Krivka <zbynek.krivka@seznam.cz>
+ * @author tomas@valenta.cz
+ * @author Marek Sacha <sachamar@fel.cvut.cz>
+ * @author Lefty <lefty@multihost.cz>
+ * @author Vojta Beran <xmamut@email.cz>
  */
 $lang['menu']                  = 'Správa nastavení';
 $lang['error']                 = 'Nastavení nebyla změněna kvůli alespoň jedné neplatné položce,
-zkotrolujte prosím své úpravy a odešlete je znovu.<br />
+zkontrolujte prosím své úpravy a odešlete je znovu.<br />
 Neplatné hodnoty se zobrazí v červeném rámečku.';
 $lang['updated']               = 'Nastavení byla úspěšně upravena.';
 $lang['nochoice']              = '(nejsou k dispozici žádné další volby)';
 $lang['locked']                = 'Nelze upravovat soubor s nastavením. Pokud to není záměrné,
 ujistěte se, <br /> že název a přístupová práva souboru s lokálním
 nastavením jsou v pořádku.';
+$lang['danger']                = 'Pozor: Změna tohoto nastavení může způsobit nedostupnost wiki a konfiguračních menu.';
+$lang['warning']               = 'Varování: Změna nastavení může mít za následek chybné chování.';
+$lang['security']              = 'Bezpečnostní varování: Změna tohoto nastavení může způsobit bezpečnostní riziko.';
 $lang['_configuration_manager'] = 'Správa nastavení';
 $lang['_header_dokuwiki']      = 'Nastavení DokuWiki';
 $lang['_header_plugin']        = 'Nastavení pluginů';
@@ -63,10 +70,10 @@ $lang['useheading']            = 'Používat první nadpis jako název stránky'
 $lang['refcheck']              = 'Kontrolovat odkazy na média (před vymazáním)';
 $lang['refshow']               = 'Počet zobrazených odkazů na média';
 $lang['allowdebug']            = 'Povolit debugování. <b>Vypněte, pokud to nepotřebujete!</b>';
-$lang['usewordblock']          = 'Blokovat spam za použítí seznamu známých spamových slov';
+$lang['usewordblock']          = 'Blokovat spam za použití seznamu známých spamových slov';
 $lang['indexdelay']            = 'Časová prodleva před indexací (v sekundách)';
 $lang['relnofollow']           = 'Používat rel="nofollow" na externí odkazy';
-$lang['mailguard']             = 'Metoda "zamaskování" emailových addres';
+$lang['mailguard']             = 'Metoda "zamaskování" emailových adres';
 $lang['iexssprotect']          = 'Zkontrolovat nahrané soubory vůči možnému škodlivému JavaScriptu či HTML';
 $lang['showuseras']            = 'Co se má přesně zobrazit, když se ukazuje uživatel, který naposledy editoval stránku';
 $lang['useacl']                = 'Používat přístupová práva (ACL)';
@@ -80,7 +87,6 @@ $lang['profileconfirm']        = 'Potvrdit změny v profilu zadáním hesla';
 $lang['disableactions']        = 'Vypnout DokuWiki akce';
 $lang['disableactions_check']  = 'Zkontrolovat';
 $lang['disableactions_subscription'] = 'Přihlásit se/Odhlásit se ze seznamu pro odběr změn';
-$lang['disableactions_nssubscription'] = 'Přihlásit se/Odhlásit se ze seznamu pro odběr změn ve jmenném prostoru';
 $lang['disableactions_wikicode'] = 'Prohlížet zdrojové kódy/Export wiki textu';
 $lang['disableactions_other']  = 'Další akce (oddělené čárkou)';
 $lang['sneaky_index']          = 'Ve výchozím nastavení DokuWiki zobrazuje v indexu všechny
@@ -90,13 +96,16 @@ vnořené jmenné prostory, k nimž právo má, budou přesto skryty.
 To může mít za následek, že index bude při některých
 nastaveních ACL nepoužitelný.';
 $lang['auth_security_timeout'] = 'Časový limit pro autentikaci (v sekundách)';
-$lang['securecookie']          = 'Má prohlížeč posílat cookies nastavené přes HTTPS opět jen přes HTTPS? Vypňete tuto volbu, pokud chcete, aby bylo pomocí SSL zabezpečeno pouze přihlašování do wiki, ale obsah budete prohlížet nezabezpečeně.';
-$lang['updatecheck']           = 'Kontrolovat aktualizace a bezpečnostní varování? DokuWiki potřebuje pro tuto funkci přístup k splitbrain.org';
+$lang['securecookie']          = 'Má prohlížeč posílat cookies nastavené přes HTTPS opět jen přes HTTPS? Vypněte tuto volbu, pokud chcete, aby bylo pomocí SSL zabezpečeno pouze přihlašování do wiki, ale obsah budete prohlížet nezabezpečeně.';
+$lang['xmlrpc']                = 'Povolit/Zakázat rozhraní XML-RPC.';
+$lang['xmlrpcuser']            = 'Omezit přístup pomocí XML-RPC pouze na zde zadané skupiny či uživatele (oddělené čárkami). Necháte-li pole prázdné, dáte přístup komukoliv.';
+$lang['updatecheck']           = 'Kontrolovat aktualizace a bezpečnostní varování? DokuWiki potřebuje pro tuto funkci přístup k update.dokuwiki.org';
 $lang['userewrite']            = 'Používat "pěkná" URL';
 $lang['useslash']              = 'Používat lomítko jako oddělovač jmenných prostorů v URL';
 $lang['usedraft']              = 'Během editace ukládat koncept automaticky';
 $lang['sepchar']               = 'Znak pro oddělování slov v názvech stránek';
 $lang['canonical']             = 'Používat plně kanonická URL';
+$lang['fnencode']              = 'Metoda pro kódování ne-ASCII názvů souborů';
 $lang['autoplural']            = 'Kontrolovat plurálové tvary v odkazech';
 $lang['compression']           = 'Metoda komprese pro staré verze';
 $lang['cachetime']             = 'Maximální životnost cache (v sekundách)';
@@ -104,19 +113,20 @@ $lang['locktime']              = 'Maximální životnost zámkových souborů (v
 $lang['fetchsize']             = 'Maximální velikost souboru (v bajtech), co ještě fetch.php bude stahovat z externích zdrojů';
 $lang['notify']                = 'Posílat oznámení o změnách na následující emailovou adresu';
 $lang['registernotify']        = 'Posílat informace o nově registrovaných uživatelích na tuto mailovou adresu';
-$lang['mailfrom']              = 'Emailová addresa, která se bude používat pro automatické maily';
+$lang['mailfrom']              = 'E-mailová adresa, která se bude používat pro automatické maily';
+$lang['mailprefix']            = 'Předpona předmětu e-mailu, která se bude používat pro automatické maily';
 $lang['gzip_output']           = 'Používat pro xhtml Content-Encoding gzip';
 $lang['gdlib']                 = 'Verze GD knihovny';
 $lang['im_convert']            = 'Cesta k nástroji convert z balíku ImageMagick';
 $lang['jpg_quality']           = 'Kvalita komprese JPEG (0-100)';
 $lang['subscribers']           = 'Možnost přihlásit se k odběru novinek stránky';
+$lang['subscribe_time']        = 'Časový interval v sekundách, ve kterém jsou posílány změny a souhrny změn. Interval by neměl být kratší než čas uvedený v recent_days.';
 $lang['compress']              = 'Zahustit CSS a JavaScript výstup';
 $lang['hidepages']             = 'Skrýt stránky odpovídající vzoru (regulární výrazy)';
 $lang['send404']               = 'Posílat "HTTP 404/Page Not Found" pro neexistují stránky';
 $lang['sitemap']               = 'Generovat Google sitemap (interval ve dnech)';
 $lang['broken_iua']            = 'Je na vašem systému funkce ignore_user_abort porouchaná? To může způsobovat nefunkčnost vyhledávacího indexu. O kombinaci IIS+PHP/CGI je známo, že nefunguje správně. Viz <a href="http://bugs.splitbrain.org/?do=details&amp;task_id=852">Bug 852</a> pro více informací.';
 $lang['xsendfile']             = 'Používat X-Sendfile hlavničky pro download statických souborů z webserveru? Je však požadována podpora této funkce na straně Vašeho webserveru.';
-$lang['xmlrpc']                = 'Povolit/Zakázat rozhraní XML-RPC.';
 $lang['renderer_xhtml']        = 'Vykreslovací jádro pro hlavní (xhtml) výstup wiki';
 $lang['renderer__core']        = '%s (jádro DokuWiki)';
 $lang['renderer__plugin']      = '%s (plugin)';
@@ -137,6 +147,7 @@ $lang['proxy____port']         = 'Proxy port';
 $lang['proxy____user']         = 'Proxy uživatelské jméno';
 $lang['proxy____pass']         = 'Proxy heslo';
 $lang['proxy____ssl']          = 'Použít SSL při připojení k proxy';
+$lang['proxy____except']       = 'Regulární výrazy pro URL, pro které bude přeskočena proxy.';
 $lang['safemodehack']          = 'Zapnout safemode hack';
 $lang['ftp____host']           = 'FTP server pro safemode hack';
 $lang['ftp____port']           = 'FTP port pro safemode hack';
@@ -184,3 +195,4 @@ $lang['useheading_o_0']        = 'Nikdy';
 $lang['useheading_o_navigation'] = 'Pouze pro navigaci';
 $lang['useheading_o_content']  = 'Pouze pro wiki obsah';
 $lang['useheading_o_1']        = 'Vždy';
+$lang['readdircache']          = 'Maximální stáří readdir cache (sec)';

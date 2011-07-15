@@ -2,7 +2,7 @@
 /**
  * Galicianlanguage file
  *
- * @author CiberIrmandade da Fala <infoxeral@ciberirmandade.org>
+ * @author Medúlio <medulio@ciberirmandade.org>
  */
 $lang['menu']                  = 'Xestor de Usuarios';
 $lang['noauth']                = '(autenticación de usuarios non dispoñible)';

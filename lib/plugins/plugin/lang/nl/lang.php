@@ -6,6 +6,11 @@
  * @author John de Graaff <john@de-graaff.net>
  * @author Niels Schoot <niels.schoot@quintiq.com>
  * @author Dion Nicolaas <dion@nicolaas.net>
+ * @author Danny Rotsaert <danny.rotsaert@edpnet.be>
+ * @author Marijn Hofstra hofstra.m@gmail.com
+ * @author Matthias Carchon webmaster@c-mattic.be
+ * @author Marijn Hofstra <hofstra.m@gmail.com>
+ * @author Timon Van Overveldt <timonvo@gmail.com>
  */
 $lang['menu']                  = 'Plugins beheren';
 $lang['download']              = 'Download en installeer een nieuwe plugin';
@@ -51,3 +56,4 @@ $lang['enabled']               = 'Plugin %s ingeschakeld.';
 $lang['notenabled']            = 'Plugin %s kon niet worden ingeschakeld, controleer bestandsrechten.';
 $lang['disabled']              = 'Plugin %s uitgeschakeld.';
 $lang['notdisabled']           = 'Plugin %s kon niet worden uitgeschakeld, controleer bestandsrechten.';
+$lang['packageinstalled']      = 'Plugin package (%d plugin%s: %s) succesvol geïnstalleerd.';

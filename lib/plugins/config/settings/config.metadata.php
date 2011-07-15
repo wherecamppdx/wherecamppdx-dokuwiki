@@ -16,6 +16,7 @@
  *   ''             - default class ('setting'), textarea, minimal input validation, setting output in quotes
  *   'string'       - single line text input, minimal input validation, setting output in quotes
  *   'numeric'      - text input, accepts numbers and arithmetic operators, setting output without quotes
+ *                    if given the '_min' and '_max' parameters are used for validation
  *   'numericopt'   - like above, but accepts empty values
  *   'onoff'        - checkbox input, setting output  0|1
  *   'multichoice'  - select input (single choice), setting output with quotes, required _choices parameter
@@ -54,6 +55,8 @@
  *   '_combine'    - complimentary output setting values which can be combined into a single display checkbox
  *                   optional for 'multicheckbox', ignored by other classes
  *   '_code'       - encoding method to use, accepted values: 'base64','uuencode','plain'.  defaults to plain.
+ *   '_min'        - minimum numeric value, optional for 'numeric' and 'numericopt', ignored by others
+ *   '_max'        - maximum numeric value, optional for 'numeric' and 'numericopt', ignored by others
  *
  * @author    Chris Smith <chris@jalakai.co.uk>
  */
@@ -98,7 +101,7 @@ $meta['allowdebug']  = array('onoff');
 
 $meta['_display']    = array('fieldset');
 $meta['recent']      = array('numeric');
-$meta['breadcrumbs'] = array('numeric');
+$meta['breadcrumbs'] = array('numeric','_min' => 0);
 $meta['youarehere']  = array('onoff');
 $meta['fullpath']    = array('onoff');
 $meta['typography']  = array('multichoice','_choices' => array(0,1,2));
@@ -119,7 +122,7 @@ $meta['_authentication'] = array('fieldset');
 $meta['useacl']      = array('onoff');
 $meta['autopasswd']  = array('onoff');
 $meta['authtype']    = array('authtype');
-$meta['passcrypt']   = array('multichoice','_choices' => array('smd5','md5','apr1','sha1','ssha','crypt','mysql','my411'));
+$meta['passcrypt']   = array('multichoice','_choices' => array('smd5','md5','apr1','sha1','ssha','crypt','mysql','my411','kmd5','pmd5','hmd5'));
 $meta['defaultgroup']= array('string');
 $meta['superuser']   = array('string');
 $meta['manager']     = array('string');
@@ -127,11 +130,13 @@ $meta['profileconfirm'] = array('onoff');
 $meta['rememberme'] = array('onoff');
 $meta['registernotify'] = array('email');
 $meta['disableactions'] = array('disableactions',
-                                '_choices' => array('backlink','index','recent','revisions','search','subscription','nssubscription','register','resendpwd','profile','edit','wikicode','check'),
-                                '_combine' => array('subscription' => array('subscribe','unsubscribe'), 'wikicode' => array('source','export_raw'), 'nssubscription' => array('subscribens','unsubscribens')));
+                                '_choices' => array('backlink','index','recent','revisions','search','subscription','register','resendpwd','profile','edit','wikicode','check'),
+                                '_combine' => array('subscription' => array('subscribe','unsubscribe'), 'wikicode' => array('source','export_raw')));
 $meta['sneaky_index'] = array('onoff');
 $meta['auth_security_timeout'] = array('numeric');
 $meta['securecookie'] = array('onoff');
+$meta['xmlrpc']       = array('onoff');
+$meta['xmlrpcuser']   = array('string');
 
 $meta['_anti_spam']  = array('fieldset');
 $meta['usewordblock']= array('onoff');
@@ -144,8 +149,9 @@ $meta['_editing']    = array('fieldset');
 $meta['usedraft']    = array('onoff');
 $meta['htmlok']      = array('onoff');
 $meta['phpok']       = array('onoff');
-$meta['notify']      = array('email');
+$meta['notify']      = array('email', '_multiple' => true);
 $meta['subscribers'] = array('onoff');
+$meta['subscribe_time'] = array('numeric');
 $meta['locktime']    = array('numeric');
 $meta['cachetime']   = array('numeric');
 
@@ -168,8 +174,10 @@ $meta['userewrite']  = array('multichoice','_choices' => array(0,1,2));
 $meta['useslash']    = array('onoff');
 $meta['sepchar']     = array('sepchar');
 $meta['canonical']   = array('onoff');
+$meta['fnencode']    = array('multichoice','_choices' => array('url','safe','utf-8'));
 $meta['autoplural']  = array('onoff');
 $meta['mailfrom']    = array('richemail');
+$meta['mailprefix']  = array('string');
 $meta['compress']    = array('onoff');
 $meta['gzip_output'] = array('onoff');
 $meta['hidepages']   = array('string');
@@ -184,8 +192,8 @@ $meta['recent_days'] = array('numeric');
 $meta['rss_show_summary'] = array('onoff');
 $meta['broken_iua']  = array('onoff');
 $meta['xsendfile']   = array('multichoice','_choices' => array(0,1,2,3));
-$meta['xmlrpc']      = array('onoff');
 $meta['renderer_xhtml'] = array('renderer','_format' => 'xhtml','_choices' => array('xhtml'));
+$meta['readdircache'] = array('numeric');
 
 $meta['_network']    = array('fieldset');
 $meta['proxy____host'] = array('string','_pattern' => '#^(|[a-z0-9\-\.+]+)$#i');
@@ -193,6 +201,7 @@ $meta['proxy____port'] = array('numericopt');
 $meta['proxy____user'] = array('string');
 $meta['proxy____pass'] = array('password','_code' => 'base64');
 $meta['proxy____ssl']  = array('onoff');
+$meta['proxy____except'] = array('string');
 $meta['safemodehack'] = array('onoff');
 $meta['ftp____host']  = array('string','_pattern' => '#^(|[a-z0-9\-\.+]+)$#i');
 $meta['ftp____port']  = array('numericopt');

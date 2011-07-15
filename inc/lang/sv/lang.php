@@ -7,10 +7,15 @@
  * @author Per Foreby <per@foreby.se>
  * @author Nicklas Henriksson <nicklas[at]nihe.se>
  * @author Håkan Sandell <hakan.sandell[at]mydata.se>
+ * @author Håkan Sandell <hakan.sandell@home.se>
  * @author Dennis Karlsson
  * @author Tormod Otter Johansson <tormod@latast.se>
+ * @author Tormod Johansson <tormod.otter.johansson@gmail.com>
  * @author emil@sys.nu
  * @author Pontus Bergendahl <pontus.bergendahl@gmail.com>
+ * @author Emil Lind <emil@sys.nu>
+ * @author Bogge Bogge <bogge@bogge.com>
+ * @author Peter Åström <eaustreum@gmail.com>
  */
 $lang['encoding']              = 'utf-8';
 $lang['direction']             = 'ltr';
@@ -44,16 +49,14 @@ $lang['btn_back']              = 'Tillbaka';
 $lang['btn_backlink']          = 'Tillbakalänkar';
 $lang['btn_backtomedia']       = 'Tillbaka till val av Mediafil';
 $lang['btn_subscribe']         = 'Prenumerera på ändringar';
-$lang['btn_unsubscribe']       = 'Säg upp prenumeration på ändringar';
-$lang['btn_subscribens']       = 'Prenumerera på namnrymdsändringar';
-$lang['btn_unsubscribens']     = 'Sluta prenumerera på namnrymdsändringar
-';
 $lang['btn_profile']           = 'Uppdatera profil';
 $lang['btn_reset']             = 'Återställ';
 $lang['btn_resendpwd']         = 'Skicka nytt lösenord';
 $lang['btn_draft']             = 'Redigera utkast';
 $lang['btn_recover']           = 'Återskapa utkast';
 $lang['btn_draftdel']          = 'Radera utkast';
+$lang['btn_revert']            = 'Återställ';
+$lang['btn_register']          = 'Registrera';
 $lang['loggedinas']            = 'Inloggad som';
 $lang['user']                  = 'Användarnamn';
 $lang['pass']                  = 'Lösenord';
@@ -63,7 +66,6 @@ $lang['passchk']               = 'en gång till';
 $lang['remember']              = 'Kom ihåg mig';
 $lang['fullname']              = 'Namn';
 $lang['email']                 = 'E-post';
-$lang['register']              = 'Registrera';
 $lang['profile']               = 'Användarprofil';
 $lang['badlogin']              = 'Felaktigt användarnamn eller lösenord.';
 $lang['minoredit']             = 'Små ändringar';
@@ -92,13 +94,43 @@ $lang['resendpwdconfirm']      = 'En verifieringslänk har skickats med e-post.'
 $lang['resendpwdsuccess']      = 'Ditt nya lösenord har skickats med e-post.';
 $lang['license']               = 'Om inte annat angivet, innehållet i denna wiki är licensierat under följande licenser:';
 $lang['licenseok']             = 'Notera: Genom att ändra i denna sidan så accepterar du att licensiera ditt bidrag under följande licenser:';
+$lang['searchmedia']           = 'Sök efter filnamn:';
+$lang['searchmedia_in']        = 'Sök i %s';
 $lang['txt_upload']            = 'Välj fil att ladda upp';
 $lang['txt_filename']          = 'Ladda upp som (ej obligatoriskt)';
 $lang['txt_overwrt']           = 'Skriv över befintlig fil';
 $lang['lockedby']              = 'Låst av';
 $lang['lockexpire']            = 'Lås upphör att gälla';
 $lang['willexpire']            = 'Ditt redigeringslås för detta dokument kommer snart att upphöra.\nFör att undvika versionskonflikter bör du förhandsgranska ditt dokument för att förlänga redigeringslåset.';
-$lang['notsavedyet']           = 'Det finns ändringar som inte är sparade.\nÄr du säker på att du vill fortsätta?';
+$lang['js']['notsavedyet']     = 'Det finns ändringar som inte är sparade.
+Är du säker på att du vill fortsätta?';
+$lang['js']['searchmedia']     = 'Sök efter filer';
+$lang['js']['keepopen']        = 'Lämna fönstret öppet efter val av fil';
+$lang['js']['hidedetails']     = 'Dölj detaljer';
+$lang['js']['mediatitle']      = 'Länkinställningar';
+$lang['js']['mediadisplay']    = 'Länktyp';
+$lang['js']['mediaalign']      = 'Justering';
+$lang['js']['mediasize']       = 'Bildstorlek';
+$lang['js']['mediatarget']     = 'Länköppning';
+$lang['js']['mediaclose']      = 'Stäng';
+$lang['js']['mediadisplayimg'] = 'Visa bilden.';
+$lang['js']['mediadisplaylnk'] = 'Visa endast länken.';
+$lang['js']['mediasmall']      = 'Liten storlek';
+$lang['js']['mediamedium']     = 'Mellanstor storlek';
+$lang['js']['medialarge']      = 'Stor storlek';
+$lang['js']['mediaoriginal']   = 'Originalstorlek';
+$lang['js']['mediadirect']     = 'Direktlänk till originalet';
+$lang['js']['medianolnk']      = 'Ingen länk';
+$lang['js']['medianolink']     = 'Länka inte bilden';
+$lang['js']['medialeft']       = 'Justera bilden till vänster.';
+$lang['js']['mediaright']      = 'Justera bilden till höger.';
+$lang['js']['mediacenter']     = 'Centrera bilden.';
+$lang['js']['nosmblinks']      = 'Länkning till Windowsresurser fungerar bara med Microsofts Internet Explorer.
+Du kan fortfarande klippa och klistra in länken om du använder en annan webbläsare än MSIE.';
+$lang['js']['linkwiz']         = 'Snabbguide Länkar';
+$lang['js']['linkto']          = 'Länk till:';
+$lang['js']['del_confirm']     = 'Vill du verkligen radera?';
+$lang['js']['mu_btn']          = 'Ladda upp flera filer samtidigt';
 $lang['rssfailed']             = 'Ett fel uppstod när detta RSS-flöde skulle hämtas: ';
 $lang['nothingfound']          = 'Inga filer hittades.';
 $lang['mediaselect']           = 'Mediafiler';
@@ -106,7 +138,7 @@ $lang['fileupload']            = 'Ladda upp mediafiler';
 $lang['uploadsucc']            = 'Uppladdningen lyckades';
 $lang['uploadfail']            = 'Uppladdningen misslyckades, fel filskydd?';
 $lang['uploadwrong']           = 'Uppladdning nekad. Filändelsen är inte tillåten!';
-$lang['uploadexist']           = 'Filen finns redan. Gjorde ingenting.';
+$lang['uploadexist']           = 'Filen finns redan. Ingenting gjordes.';
 $lang['uploadbadcontent']      = 'Det uppladdade innehållet stämde inte överens med filändelsen %s.';
 $lang['uploadspam']            = 'Uppladdningen stoppades av spärrlistan för spam.';
 $lang['uploadxss']             = 'Uppladdningen stoppades på grund av eventuellt skadligt innehåll.';
@@ -116,11 +148,7 @@ $lang['deletefail']            = 'Kunde inte radera "%s" - kontrollera filskydd.
 $lang['mediainuse']            = 'Filen "%s" har inte raderats - den används fortfarande.';
 $lang['namespaces']            = 'Namnrymder';
 $lang['mediafiles']            = 'Tillgängliga filer i';
-$lang['js']['keepopen']        = 'Lämna fönstret öppet efter val av fil';
-$lang['js']['hidedetails']     = 'Dölj detaljer';
-$lang['js']['nosmblinks']      = 'Länkning till Windowsresurser fungerar bara med Microsofts Internet Explorer.
-Du kan klippa och klistra in länken om du använder en annan webbläsare än MSIE..';
-$lang['js']['mu_btn']          = 'Ladda upp flera filer samtidigt';
+$lang['accessdenied']          = 'Du får inte läsa den här sidan.';
 $lang['mediausage']            = 'Använd följande syntax för att referera till denna fil:';
 $lang['mediaview']             = 'Visa originalfilen';
 $lang['mediaroot']             = 'rot';
@@ -136,6 +164,9 @@ $lang['current']               = 'aktuell';
 $lang['yours']                 = 'Din version';
 $lang['diff']                  = 'visa skillnader mot aktuell version';
 $lang['diff2']                 = 'Visa skillnader mellan valda versioner';
+$lang['difflink']              = 'Länk till den här jämförelsesidan';
+$lang['diff_type']             = 'Visa skillnader:';
+$lang['diff_side']             = 'Sida vid sida';
 $lang['line']                  = 'Rad';
 $lang['breadcrumb']            = 'Spår';
 $lang['youarehere']            = 'Här är du';
@@ -147,11 +178,11 @@ $lang['restored']              = 'tidigare version återställd';
 $lang['external_edit']         = 'extern redigering';
 $lang['summary']               = 'Redigeringskommentar';
 $lang['noflash']               = '<a href="http://www.adobe.com/products/flashplayer/">Adobe Flash Plugin</a> behövs för att visa detta innehåll.';
+$lang['download']              = 'Ladda ner kodfragmentet';
 $lang['mail_newpage']          = 'sida tillagd:';
 $lang['mail_changed']          = 'sida ändrad:';
 $lang['mail_new_user']         = 'Ny användare:';
 $lang['mail_upload']           = 'fil uppladdad:';
-$lang['qb_alert']              = 'Ange den text du vill formattera.\nDen kommer att läggas till i slutet av dokumentet.';
 $lang['qb_bold']               = 'Fet text';
 $lang['qb_italic']             = 'Kursiv text';
 $lang['qb_underl']             = 'Understruken text';
@@ -162,6 +193,11 @@ $lang['qb_h2']                 = 'Rubrik nivå 2';
 $lang['qb_h3']                 = 'Rubrik nivå 3';
 $lang['qb_h4']                 = 'Rubrik nivå 4';
 $lang['qb_h5']                 = 'Rubrik nivå 5';
+$lang['qb_h']                  = 'Rubrik';
+$lang['qb_hs']                 = 'Välj Rubrik';
+$lang['qb_hplus']              = 'Större Rubrik';
+$lang['qb_hminus']             = 'Mindre Rubrik';
+$lang['qb_hequal']             = 'Rubrik samma nivå.';
 $lang['qb_link']               = 'Intern Länk';
 $lang['qb_extlink']            = 'Extern Länk';
 $lang['qb_hr']                 = 'Horisontell linje';
@@ -171,7 +207,7 @@ $lang['qb_media']              = 'Lägg till bilder och andra filer';
 $lang['qb_sig']                = 'Infoga signatur';
 $lang['qb_smileys']            = 'Smileys';
 $lang['qb_chars']              = 'Specialtecken';
-$lang['del_confirm']           = 'Vill du verkligen radera?';
+$lang['upperns']               = 'hoppa till föräldernamnrymd';
 $lang['admin_register']        = 'Lägg till ny användare';
 $lang['metaedit']              = 'Redigera metadata';
 $lang['metasaveerr']           = 'Skrivning av metadata misslyckades';
@@ -187,11 +223,12 @@ $lang['img_copyr']             = 'Copyright';
 $lang['img_format']            = 'Format';
 $lang['img_camera']            = 'Kamera';
 $lang['img_keywords']          = 'Nyckelord';
-$lang['subscribe_success']     = 'Lade till %s i prenumerationslistan för %s';
-$lang['subscribe_error']       = 'Fel vid tillägg av %s i prenumerationslistan för %s';
-$lang['subscribe_noaddress']   = 'Det finns ingen adress knuten till ditt konto, det går inte att lägga till dig i prenumerationslistan';
-$lang['unsubscribe_success']   = 'Tog bort %s från prenumerationslistan för %s';
-$lang['unsubscribe_error']     = 'Fel vid borttagning %s från prenumerationslistan list för %s';
+$lang['subscr_m_new_header']   = 'Lägg till prenumeration';
+$lang['subscr_m_current_header'] = 'Nuvarande prenumerationer';
+$lang['subscr_m_unsubscribe']  = 'Prenumerera';
+$lang['subscr_m_subscribe']    = 'Avsluta prenumeration';
+$lang['subscr_m_receive']      = 'Ta emot';
+$lang['subscr_style_every']    = 'skicka epost vid varje ändring';
 $lang['authmodfailed']         = 'Felaktiga inställningar för användarautentisering. Var vänlig meddela wikiadministratören.';
 $lang['authtempfail']          = 'Tillfälligt fel på användarautentisering. Om felet kvarstår, var vänlig meddela wikiadministratören.';
 $lang['i_chooselang']          = 'Välj språk';
@@ -232,4 +269,14 @@ $lang['mu_fail']               = 'misslyckades';
 $lang['mu_authfail']           = 'sessionen över tid';
 $lang['mu_progress']           = '@PCT@% uppladdade';
 $lang['mu_filetypes']          = 'Tillåtna filtyper';
+$lang['mu_info']               = 'filerna uppladdade.';
+$lang['mu_lasterr']            = 'Senaste fel:';
 $lang['recent_global']         = 'Du bevakar ändringar i namnrymden <b>%s</b>. Du kan också titta på <a href="%s">senaste ändringar för hela wikin</a>.';
+$lang['years']                 = '%d år sedan';
+$lang['months']                = '%d månader sedan';
+$lang['weeks']                 = '%d veckor sedan';
+$lang['days']                  = '%d dagar sedan';
+$lang['hours']                 = '%d timmar sedan';
+$lang['minutes']               = '%d minuter sedan';
+$lang['seconds']               = '%d sekunder sedan';
+$lang['wordblock']             = 'Din ändring sparades inte för att den innehåller otillåten text (spam).';

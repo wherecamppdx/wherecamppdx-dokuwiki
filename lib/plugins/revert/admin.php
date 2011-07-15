@@ -2,10 +2,6 @@
 // must be run within Dokuwiki
 if(!defined('DOKU_INC')) die();
 
-if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
-require_once(DOKU_PLUGIN.'admin.php');
-require_once(DOKU_INC.'inc/changelog.php');
-
 /**
  * All DokuWiki plugins to extend the admin function
  * need to inherit from this class
@@ -130,6 +126,7 @@ class admin_plugin_revert extends DokuWiki_Admin_Plugin {
      */
     function _list($filter){
         global $conf;
+        global $lang;
         echo '<hr /><br />';
         echo '<form action="" method="post"><div class="no">';
         echo '<input type="hidden" name="filter" value="'.hsc($filter).'" />';
@@ -199,4 +196,4 @@ class admin_plugin_revert extends DokuWiki_Admin_Plugin {
     }
 
 }
-//Setup VIM: ex: et ts=4 enc=utf-8 :
+//Setup VIM: ex: et ts=4 :
