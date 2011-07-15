@@ -6,7 +6,7 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     This version by François Hodierne (http://h6e.net/)
  * @author     Original by Andreas Gohr <andi@splitbrain.org>
- * @version    2.0 beta 3
+ * @version    2.2.0
  */
 
 /**
@@ -46,7 +46,7 @@ class action_plugin_openid extends DokuWiki_Action_Plugin {
 		return array(
 			'author' => 'h6e.net',
 			'email'  => 'contact@h6e.net',
-			'date'   => '2009-04-07',
+			'date'   => '2011-02-15',
 			'name'   => 'OpenID plugin',
 			'desc'   => 'Authenticate on a DokuWiki with OpenID',
 			'url'    => 'http://h6e.net/dokuwiki/plugins/openid',
@@ -290,11 +290,11 @@ class action_plugin_openid extends DokuWiki_Action_Plugin {
 			$form->addHidden('mode', 'add');
 			$form->addElement(
 				form_makeTextField(
-					'openid_identifier', $_POST['openid_identifier'], $this->getLang('openid_url_label'), 'openid__url', 'block', array('size'=>'50')
+					'openid_identifier', isset($_POST['openid_identifier']) ? $_POST['openid_identifier'] : '',
+					$this->getLang('openid_url_label'), 'openid__url', 'block', array('size'=>'50')
 				)
 			);
 			$form->addElement(form_makeButton('submit', '', $this->getLang('add_button')));
-			$form->endFieldset();
 			html_form('add', $form);
 			print '</div>'.NL;
 		}
@@ -354,16 +354,14 @@ class action_plugin_openid extends DokuWiki_Action_Plugin {
 	function login_user($openid)
 	{
 		global $USERINFO, $auth, $conf;
-        
+
 		// look for associations passed from an auth backend in user infos
 		$users = $auth->retrieveUsers();
 		foreach ($users as $id => $user) {
 			if (isset($user['openids'])) {
 				foreach ($user['openids'] as $identity) {
 					if ($identity == $openid) {
-						$USERINFO = $auth->getUserData($id);
-						$this->update_session($id);
-						return true;
+						return $this->update_session($id);
 					}
 				}
 			}
@@ -374,34 +372,26 @@ class action_plugin_openid extends DokuWiki_Action_Plugin {
 		// this openid is associated with a real wiki user account
 		if (isset($associations[$openid])) {
 			$user = $associations[$openid];
-			$USERINFO = $auth->getUserData($user);
-			if (empty($USERINFO)) {
-				msg('Unknown OpenID user', -1);
-				return false;
-			}
-			$this->update_session($user);
-
-		// no real wiki user account associated
-		} else {
-			$USERINFO['pass'] = uniqid();
-			$USERINFO['name'] = 'OpenID';
-			$USERINFO['grps'] = array($conf['defaultgroup'], 'openid');
-			$this->update_session($openid);
-
-			$redirect_url = $this->_self('openid');
-
-			$sregs = array('email', 'nickname', 'fullname');
-			foreach ($sregs as $sreg) {
-				if (!empty($_GET["openid_sreg_$sreg"])) {
-					$redirect_url .= "&$sreg=" . urlencode($_GET["openid_sreg_$sreg"]);
-				}
-			}
-
-			// we will advice the user to register a real user account
-			$this->_redirect($redirect_url);
+			return $this->update_session($user);
 		}
 
-		return true;
+		// no real wiki user account associated
+
+		// note that the generated cookie is invalid and will be invalided
+		// when the 'auth_security_timeout' expire
+		$this->update_session($openid);
+
+		$redirect_url = $this->_self('openid');
+
+		$sregs = array('email', 'nickname', 'fullname');
+		foreach ($sregs as $sreg) {
+			if (!empty($_GET["openid_sreg_$sreg"])) {
+				$redirect_url .= "&$sreg=" . urlencode($_GET["openid_sreg_$sreg"]);
+			}
+		}
+
+		// we will advice the user to register a real user account
+		$this->_redirect($redirect_url);
 	}
 
 	/**
@@ -410,7 +400,7 @@ class action_plugin_openid extends DokuWiki_Action_Plugin {
 	 */
 	function register_user()
 	{
-		global $USERINFO, $ID, $lang, $conf, $auth, $openid_associations;
+		global $ID, $lang, $conf, $auth, $openid_associations;
 
 		if(!$auth->canDo('addUser')) return false;
 
@@ -443,7 +433,6 @@ class action_plugin_openid extends DokuWiki_Action_Plugin {
 		// we update the OpenID associations array
 		$this->register_openid_association($user, $openid);
 
-		$USERINFO = $auth->getUserData($user);
 		$this->update_session($user);
 
 		// account created, everything OK
@@ -460,27 +449,26 @@ class action_plugin_openid extends DokuWiki_Action_Plugin {
 	 */
 	function update_session($user)
 	{
-		global $USERINFO, $INFO;
-		
+		session_start();
+
+		global $USERINFO, $INFO, $conf, $auth;
+
 		$_SERVER['REMOTE_USER'] = $user;
 
-		// set cookie
-		$sticky = true;
-		$cookie = base64_encode("$user|$sticky|openid");
-		if($sticky) $time = time()+60*60*24*365; //one year
-		setcookie(DOKU_COOKIE, $cookie, $time, DOKU_REL);
+		$USERINFO = $auth->getUserData($user);
+		if (empty($USERINFO)) {
+			$USERINFO['pass'] = 'invalid';
+			$USERINFO['name'] = 'OpenID';
+			$USERINFO['grps'] = array($conf['defaultgroup'], 'openid');
+		}
 
-		// set session after reopening it
-		session_start();
-		$_SESSION[DOKU_COOKIE]['auth']['user'] = $user;
-		$_SESSION[DOKU_COOKIE]['auth']['pass'] = 'openid';
-		$_SESSION[DOKU_COOKIE]['auth']['buid'] = auth_browseruid();
-		$_SESSION[DOKU_COOKIE]['auth']['info'] = $USERINFO;
-		$_SESSION[DOKU_COOKIE]['auth']['time'] = time();
-		session_write_close();
+		$pass = PMA_blowfish_encrypt($USERINFO['pass'], auth_cookiesalt());
+		auth_setCookie($user, $pass, false);
 
 		// auth data has changed, reinit the $INFO array
 		$INFO = pageinfo();
+
+		return true;
 	}
 
 	function register_openid_association($user, $openid)
@@ -522,6 +510,7 @@ class action_plugin_openid extends DokuWiki_Action_Plugin {
 			$openid_associations = $this->openid_associations;
 		} else if (file_exists(DOKU_CONF.'openid.php')) {
 			// load OpenID associations array
+			$openid_associations = array();
 			include(DOKU_CONF.'openid.php');
 			$this->openid_associations = $openid_associations;
 		} else {
@@ -530,7 +519,7 @@ class action_plugin_openid extends DokuWiki_Action_Plugin {
 		// Maybe is there a better way to filter the array
 		if (!empty($username)) {
 			$user_openid_associations = array();
-			foreach ($openid_associations as $openid => $login) {
+			foreach ((array)$openid_associations as $openid => $login) {
 				if ($username == $login) {
 					$user_openid_associations[$openid] = $login;
 				}
